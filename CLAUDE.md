@@ -180,8 +180,9 @@ an `Action` with both a button and a key.
 ## Known gaps
 
 - The sounds were never heard by whoever made them: checked as numbers only. The
-  intro tune's timing against the falling letters is by arithmetic. That goes for
-  the six celebration tunes too.
+  intro tune's timing against the falling letters is by arithmetic. The exception
+  is the six celebration tunes, which the user listened to on Linux (2026-10-08,
+  through `pw-play`) and liked; they have not been played through `afplay`.
 - `tests/e2e.sh` does not reach a celebration: it would take three rounds of
   guessing. The unit tests play the whole passport instead.
 - The animations were only seen as captured frames, not live.
