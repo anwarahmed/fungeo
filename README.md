@@ -112,8 +112,8 @@ fungeo
 
 | | Mouse | Keys |
 |---|---|---|
-| Choose a category and level | click its square | arrows, then `Enter` |
-| Answer | click it | `A` `B` `C` `D` or `1` `2` `3` `4`, or arrows and `Enter` |
+| Choose a category and level | click its square | arrows or `H` `J` `K` `L`, then `Enter` |
+| Answer | click it | `A` `B` `C` `D` or `1` `2` `3` `4`, or arrows (`H` `J` `K` `L`) and `Enter` |
 | Next question | click **Next** | `Enter` or `Space` |
 | Back to the passport | click **Back** | `Esc` |
 | Theme, sound, motion | click them | `T`, `S`, `M` |

@@ -426,8 +426,16 @@ impl App {
     pub const DONE: [Action; 2] = [Action::Back, Action::Again];
 
     pub fn on_key(&mut self, key: KeyEvent) {
+        // Vim's H J K L are the arrows, everywhere. None of them is an answer's letter
+        // or anything else's.
         let code = match key.code {
-            KeyCode::Char(c) => KeyCode::Char(c.to_ascii_lowercase()),
+            KeyCode::Char(c) => match c.to_ascii_lowercase() {
+                'h' => KeyCode::Left,
+                'j' => KeyCode::Down,
+                'k' => KeyCode::Up,
+                'l' => KeyCode::Right,
+                c => KeyCode::Char(c),
+            },
             other => other,
         };
         if key.modifiers.contains(KeyModifiers::CONTROL) && code == KeyCode::Char('c') {
@@ -705,6 +713,38 @@ mod tests {
 
     fn round(app: &App) -> &Round {
         &app.playing.as_ref().unwrap().2
+    }
+
+    #[test]
+    fn h_j_k_l_are_the_arrows() {
+        // On the passport, each letter leaves the marker where its arrow does.
+        for (letter, arrow) in [('h', KeyCode::Left), ('j', KeyCode::Down), ('k', KeyCode::Up), ('l', KeyCode::Right)] {
+            let (mut with_letter, mut with_arrow) = (app(), app());
+            press(&mut with_letter, KeyCode::Char(letter));
+            press(&mut with_arrow, arrow);
+            assert_eq!(with_letter.cursor, with_arrow.cursor, "{letter}");
+            assert_ne!(with_letter.cursor, app().cursor, "{letter} moves the marker");
+            assert_eq!(with_letter.screen, Screen::Home, "{letter}");
+            // Capitals too, as with every other letter.
+            press(&mut with_letter, KeyCode::Char(letter.to_ascii_uppercase()));
+            press(&mut with_arrow, arrow);
+            assert_eq!(with_letter.cursor, with_arrow.cursor, "{letter}");
+        }
+
+        // In a round they move between the answers and answer nothing.
+        let mut app = app();
+        press(&mut app, KeyCode::Enter);
+        app.columns = 2;
+        for (letter, arrow) in [('l', KeyCode::Right), ('j', KeyCode::Down), ('h', KeyCode::Left), ('k', KeyCode::Up)] {
+            let before = app.focus;
+            press(&mut app, arrow);
+            let moved = app.focus;
+            app.focus = before;
+            press(&mut app, KeyCode::Char(letter));
+            assert_eq!(app.focus, moved, "{letter}");
+            assert_ne!(app.focus, before, "{letter} moves the marker");
+            assert_eq!(app.phase, Phase::Asking, "{letter}");
+        }
     }
 
     /// Answers right until the bridge is built, then lets the explorer cross.

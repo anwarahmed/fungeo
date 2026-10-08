@@ -113,6 +113,9 @@ an `Action` with both a button and a key.
 - **Keys:** plain letters, unlike funchess's Ctrl combinations, because nothing is
   typed here. `A`-`D` are answers, so animations are `M` (motion), not `A`. Ctrl
   with the same letters also works, since the handler ignores Ctrl except `Ctrl-C`.
+  `H` `J` `K` `L` are the arrows (vim's), turned into them at the top of
+  `App::on_key`, so they do whatever the arrows do on every screen. A new letter key
+  must avoid those four as well as `A`-`D`, `T`, `S`, `M`, `N`, `P` and `Q`.
 - **The marker follows the mouse** (`MouseEventKind::Moved`), so there is one
   highlighted thing, not a keyboard one and a pointer one.
 - **Sound** is funchess's design: no audio library, WAV files written to the state
