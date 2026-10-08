@@ -10,7 +10,7 @@ parents; this file is for whoever changes the code.
 ```sh
 cargo run --release                          # play (from a checkout it never updates itself)
 cargo run --release -- --no-intro -t night   # straight to the passport, in a theme
-cargo test                                   # unit tests: questions, rounds, app, drawing at seven window sizes, font, sound, settings, update
+cargo test                                   # unit tests: questions, rounds, celebrations, app, drawing at seven window sizes, font, sound, settings, update
 cargo clippy --all-targets -- -D warnings    # no warnings allowed
 cargo fmt                                    # rustfmt.toml: max_width 160
 cargo run -- check [FILE...]                 # validate question files, list categories
@@ -145,6 +145,19 @@ an `Action` with both a button and a key.
   which had about 16 questions a level and dealt 12 of them to every round; there
   are now about 40 a level (flags about 20). Keep a level well above the 12 a round
   is dealt, or every round looks the same.
+- **Celebrations** (the user's list, 2026-10-08, since 0.1.2, from smallest to grandest): a
+  category finished, Easy in every category, Medium, Hard, every square of the
+  passport, and every square with three stars. They are `app::Feat`, and
+  `Feat::tier` (1 to 6) is what everything about one grows with: the tune
+  (`Sound::Fanfare`), the confetti and fireworks (`App::celebrate`, `App::advance`)
+  and the window (`ui::celebration`: a medal in the category's color, bronze, silver
+  or gold, then a cup, then the cup between two medals with the title in the colors
+  of the game's name). `App::finish` compares the feats before and after the round's
+  stars and celebrates only the grandest new one, after the stars have appeared;
+  going on before that brings it at once, so it cannot be missed, and for its first
+  `app::SEEN` seconds no key closes it. "Mix" counts as a category. Since stars are
+  not kept, each can be earned once per start. Its fireworks and front confetti are
+  drawn over the window but under its words.
 - **Stars are not kept.** The user asked (2026-10-08) for the stars to reset every
   time the game starts, so `Progress` lives in memory only and nothing is written.
   An older `progress` file in the state directory, from before, is ignored.
@@ -167,7 +180,10 @@ an `Action` with both a button and a key.
 ## Known gaps
 
 - The sounds were never heard by whoever made them: checked as numbers only. The
-  intro tune's timing against the falling letters is by arithmetic.
+  intro tune's timing against the falling letters is by arithmetic. That goes for
+  the six celebration tunes too.
+- `tests/e2e.sh` does not reach a celebration: it would take three rounds of
+  guessing. The unit tests play the whole passport instead.
 - The animations were only seen as captured frames, not live.
 - Never run by a person on a Mac; CI runs the tests there.
 - The AUR package `fungeo-bin` is rendered for each release but not pushed: the user

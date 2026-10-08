@@ -10,7 +10,7 @@ use ratatui::buffer::Buffer;
 use ratatui::layout::Rect;
 use ratatui::style::{Color, Modifier, Style};
 
-use crate::app::{Action, App, DROP, INTRO_LETTER, Phase, SINK, Screen};
+use crate::app::{Action, App, DROP, Feat, INTRO_LETTER, Phase, SINK, Screen};
 use crate::font;
 use crate::quiz::{Asked, Flag, Level, PLANKS};
 use crate::theme::{Rgb, Theme};
@@ -108,6 +108,29 @@ fn label(buf: &mut Buffer, r: Rect, text: &str, fg: Rgb, scale: usize) {
     let top = r.y + (r.height - shown as u16) / 2;
     for (i, line) in lines.iter().take(shown).enumerate() {
         centered(buf, r, top + i as u16, line, fg);
+    }
+}
+
+/// `label` with every letter in the next of the theme's colors, as the game's name
+/// is, and the colors moving along as `time` passes. Only big letters can do that:
+/// ordinary text is all in one color.
+fn bright_label(buf: &mut Buffer, r: Rect, text: &str, theme: &Theme, scale: usize, time: f32) {
+    let colors = [theme.answers[0], theme.answers[2], theme.answers[3], theme.answers[1], theme.accent];
+    let Some(lines) = (1..=scale).rev().find_map(|scale| Some((scale, big_lines(text, r, scale)?))) else {
+        return label(buf, r, text, theme.accent, 0);
+    };
+    let (scale, lines) = lines;
+    let tall = lines.len() as i32 * line_rows(scale) as i32 * 2 - if scale == 1 { 1 } else { 2 };
+    let top = r.y as i32 * 2 + (r.height as i32 * 2 - tall).max(0) / 2;
+    let mut nth = (time * 3.0) as usize;
+    for (i, line) in lines.iter().enumerate() {
+        let x = r.x as i32 + (r.width as i32 - (font::width(line) * scale) as i32) / 2;
+        for (at, letter) in line.char_indices() {
+            // A letter starts a pixel after everything before it.
+            let before = if at == 0 { 0 } else { (font::width(&line[..at]) + 1) * scale };
+            font::draw(buf, x + before as i32, top + i as i32 * line_rows(scale) as i32 * 2, &letter.to_string(), color(colors[nth % colors.len()]), scale);
+            nth += usize::from(letter != ' ');
+        }
     }
 }
 
@@ -843,6 +866,122 @@ fn done(buf: &mut Buffer, app: &mut App, r: Rect, earned: u8, best: bool) {
     }
 }
 
+/// A medal on its ribbon, and a cup: the pictures of the celebrations.
+const MEDAL: [&str; 10] = ["RR.....rr", ".RR...rr.", "..RR.rr..", "...DDD...", "..DMMMD..", ".DMMWMMD.", ".DMWWWMD.", ".DMMWMMD.", "..DMMMD..", "...DDD..."];
+const TROPHY: [&str; 10] =
+    [".GGGGGGGGG.", "GGWGGGGGDGG", "G.GWGGGGD.G", "G.GWGGGGD.G", ".GGGGGGGD..", "..GGGGGD...", "...GGGD....", "....GD.....", "...GGGD....", "..BBBBBBB.."];
+
+/// Colors whatever is drawn in `r` (a frame, for one) in the theme's colors, one after another along a
+/// slant, running on as `time` passes.
+fn rainbow(buf: &mut Buffer, r: Rect, theme: &Theme, time: f32) {
+    let colors = [theme.answers[0], theme.answers[2], theme.answers[3], theme.answers[1], theme.accent];
+    let r = r.intersection(buf.area);
+    for y in r.top()..r.bottom() {
+        for x in r.left()..r.right() {
+            if buf[(x, y)].symbol() != " " {
+                buf[(x, y)].set_fg(color(colors[((x + y) as f32 / 6.0 + time * 4.0) as usize % colors.len()]));
+            }
+        }
+    }
+}
+
+/// A celebration: a window over the end of the round with a picture, what was
+/// achieved in big letters, and a word about it. The grander the feat (`Feat::tier`),
+/// the bigger the window and what is in it. Any key or click closes it.
+fn celebration(buf: &mut Buffer, app: &mut App, area: Rect) {
+    let theme = app.theme();
+    let Some(c) = &app.celebration else { return };
+    let (feat, age, tier) = (c.feat, c.age, c.feat.tier() as u16);
+    let gold: Rgb = (255, 200, 30);
+    let (title, said, metal) = match feat {
+        Feat::Category(cat) => {
+            let name = &app.cats[cat].name;
+            (format!("{name} complete!"), format!("Every level of {name} is crossed. That page of your passport is full!"), app.cats[cat].color)
+        }
+        Feat::Level(Level::Easy) => ("Easy explorer!".into(), "You crossed the Easy bridge of every category.".into(), (205, 127, 50)),
+        Feat::Level(Level::Medium) => ("Medium master!".into(), "You crossed the Medium bridge of every category.".into(), (176, 184, 196)),
+        Feat::Level(Level::Hard) => ("Hard hero!".into(), "You crossed the Hard bridge of every category. Those were the tricky ones!".into(), gold),
+        Feat::World => ("Passport full!".into(), "Every bridge in the world is crossed. Can you get three stars on them all?".into(), gold),
+        Feat::Champion => ("World Champion!".into(), "Three stars on every bridge in the world. Nobody can do better!".into(), gold),
+    };
+
+    // How big everything is. The title gets big letters first, twice the size for the
+    // two grandest where the window has the room; the picture gets what is left.
+    let wide = (area.width - 2).min((66 + 10 * tier).max(font::width(&title) as u16 + 8));
+    let inner = wide - 4;
+    let lines = wrap(&said, inner as usize);
+    // Inside the frame: the picture, the title, the words and how to go on, with a
+    // row between them.
+    let room = (area.height - 3).saturating_sub(lines.len() as u16 + 4);
+    let fits = |scale: usize| {
+        let rows = room.saturating_sub(if scale > 1 { 6 } else { 0 });
+        big_lines(&title, Rect::new(0, 0, inner, rows), scale).map(|l| (scale, l.len() as u16 * line_rows(scale)))
+    };
+    let (scale, title_rows) = (1..=if tier >= 5 { 2 } else { 1 }).rev().find_map(fits).unwrap_or((0, 1));
+    let sprite_w: u16 = [9, 9, 9, 9, 11, 33][tier as usize - 1];
+    let unit = ((room - title_rows.min(room)) / 5).min(if tier >= 5 { 3 } else { 2 }).min(inner / sprite_w);
+    let pic = 5 * unit;
+    let high = 2 + pic + u16::from(pic > 0) + title_rows + 1 + lines.len() as u16 + 2;
+
+    // It opens from the middle.
+    let open = if app.animations { (age / 0.25).min(1.0) } else { 1.0 };
+    let (w, h) = (((wide as f32 * open) as u16).max(4), ((high as f32 * open) as u16).max(3));
+    let r = Rect::new(area.x + (area.width - w) / 2, area.y + (area.height - h) / 2, w, h);
+    let inside = button(buf, app, r, None, theme.panel, true);
+    app.buttons.push((area, Action::Skip));
+    if tier >= 6 {
+        rainbow(buf, r, theme, app.time);
+    }
+    // The fireworks, and the confetti that falls in front, go over the window but
+    // under its words, so that no star lands between two of them.
+    particles(buf, app, true);
+    if open < 1.0 {
+        return;
+    }
+
+    let mut y = inside.y;
+    if pic > 0 {
+        let shade = |c: Rgb| mix(c, (0, 0, 0), 0.3);
+        let medal = [(b'R', theme.answers[0]), (b'r', theme.answers[1]), (b'M', metal), (b'D', shade(metal)), (b'W', (255, 255, 255))];
+        let trophy = [(b'G', gold), (b'D', shade(gold)), (b'W', (255, 246, 200)), (b'B', theme.wood)];
+        let px = sprite_w * unit;
+        let mut c = Canvas::new(px, pic, theme.panel);
+        match tier {
+            // The cup, and for the champion a medal on either side of it.
+            6 => {
+                c.sprite(0, 0, &MEDAL, &medal, unit as i32);
+                c.sprite(11 * unit as i32, 0, &TROPHY, &trophy, unit as i32);
+                c.sprite(24 * unit as i32, 0, &MEDAL, &medal, unit as i32);
+            }
+            5 => c.sprite(0, 0, &TROPHY, &trophy, unit as i32),
+            _ => c.sprite(0, 0, &MEDAL, &medal, unit as i32),
+        }
+        let x = inside.x + (inside.width - px) / 2;
+        c.blit(buf, (x, y));
+        // Stars twinkling on both sides of it, more of them the grander it is.
+        for k in 0..tier * 2 {
+            let far = 3 + (k / 2) * 4;
+            let at = if k % 2 == 0 { (x + px - 1 + far).min(inside.right()) } else { x.saturating_sub(far) };
+            let lit = !app.animations || (app.time * 5.0 + k as f32 * 1.7).sin() > -0.3;
+            if lit && at >= inside.x && at < inside.right() {
+                put(buf, at, y + (k / 2 * 3 + k) % pic, if k % 4 < 2 { "★" } else { "✦" }, theme.answers[k as usize % 4], 1);
+            }
+        }
+        y += pic + 1;
+    }
+    let at = Rect::new(inside.x, y, inside.width, title_rows);
+    if tier >= 5 {
+        bright_label(buf, at, &title, theme, scale, app.time);
+    } else {
+        label(buf, at, &title, theme.good, scale);
+    }
+    y += title_rows + 1;
+    for (i, line) in lines.iter().enumerate() {
+        centered(buf, inside, y + i as u16, line, theme.text);
+    }
+    centered(buf, inside, y + lines.len() as u16 + 1, "Press any key or click to go on", theme.dim);
+}
+
 const HELP: [&str; 13] = [
     "Build a bridge across the river!",
     "",
@@ -906,7 +1045,11 @@ pub fn draw(frame: &mut Frame, app: &mut App) {
             Screen::Home => home(buf, app, area),
             Screen::Play => play(buf, app, area),
         }
-        particles(buf, app, true);
+        if app.celebration.is_some() {
+            celebration(buf, app, area);
+        } else {
+            particles(buf, app, true);
+        }
         if app.help {
             help(buf, app, area);
         }
@@ -1018,6 +1161,52 @@ mod tests {
                 assert!(app.buttons.iter().any(|(r, a)| *a == action && r.bottom() <= h), "{w}x{h}: {action:?}");
             }
         }
+    }
+
+    #[test]
+    fn every_celebration_draws_at_every_size_in_every_theme() {
+        let feats = [Feat::Category(1), Feat::Level(Level::Easy), Feat::Level(Level::Medium), Feat::Level(Level::Hard), Feat::World, Feat::Champion];
+        for (w, h) in SIZES {
+            for theme in 0..THEMES.len() {
+                let mut heights = Vec::new();
+                for feat in feats {
+                    let mut app = app();
+                    app.theme = theme;
+                    app.start(1, Level::Hard);
+                    app.phase = Phase::Done { stars: 3, best: true };
+                    // The marker on neither button, so that the only frame is the window's.
+                    app.focus = 2;
+                    screen(&mut app, w, h);
+                    app.celebrate(feat);
+                    // Opening, then open, with its confetti and fireworks going.
+                    for _ in 0..8 {
+                        app.advance(0.4);
+                        screen(&mut app, w, h);
+                    }
+                    let lines = screen(&mut app, w, h);
+                    assert!(has(&lines, "Press any key or click to go on"), "{w}x{h} {feat:?}: {lines:#?}");
+                    assert_eq!(app.buttons.last(), Some(&(Rect::new(0, 0, w, h), Action::Skip)), "{w}x{h} {feat:?}");
+                    // Its frame is inside the window, top and bottom.
+                    let frame: Vec<usize> = (0..h as usize).filter(|&y| lines[y].contains('┏') || lines[y].contains('┗')).collect();
+                    assert_eq!(frame.len(), 2, "{w}x{h} {feat:?}: {lines:#?}");
+                    heights.push(frame[1] - frame[0]);
+                    // Nothing moving, it is all there at once.
+                    app.animations = false;
+                    app.celebrate(feat);
+                    assert!(has(&screen(&mut app, w, h), "Press any key or click to go on"), "{w}x{h} {feat:?}");
+                }
+                // Where there is room for it, the grandest is the biggest.
+                assert!(heights[5] >= heights[0], "{w}x{h}: {heights:?}");
+            }
+        }
+        // In a window of the usual size the title is in big letters and there is a picture.
+        let mut app = app();
+        app.animations = false;
+        app.start(0, Level::Easy);
+        app.celebrate(Feat::Champion);
+        let lines = screen(&mut app, 80, 24);
+        assert!(!has(&lines, "World Champion!") && has(&lines, "Three stars on every bridge"), "{lines:#?}");
+        assert!(lines.iter().map(|l| l.chars().filter(|c| "█▀▄".contains(*c)).count()).sum::<usize>() > 200);
     }
 
     #[test]

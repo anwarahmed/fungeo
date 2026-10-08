@@ -22,6 +22,9 @@ passport.
   window full screen and zoom in (usually `Ctrl` `+`).
 - **Kind to a wrong answer.** A plank falls in the river, the right answer is shown,
   and the question comes back later for another try. Nobody loses.
+- **Celebrations** with medals, fireworks and a fanfare: for finishing a category,
+  for crossing every Easy, every Medium and every Hard bridge, for filling the
+  passport, and the grandest for filling it with three stars everywhere.
 - **Five color themes**, animations, sounds, and an opening with a tune.
 
 ## Install
