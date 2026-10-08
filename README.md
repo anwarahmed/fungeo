@@ -2,6 +2,8 @@
 
 A geography quiz for children, in the terminal, on Linux and macOS.
 
+![fungeo in a terminal: a flag question in big letters, under a river that is waiting for its bridge](docs/screenshot.png)
+
 Every right answer lays a plank of a bridge. Eight planks and the explorer walks
 across the river, the confetti falls, and the round earns up to three stars in the
 passport.
@@ -21,6 +23,86 @@ passport.
 - **Kind to a wrong answer.** A plank falls in the river, the right answer is shown,
   and the question comes back later for another try. Nobody loses.
 - **Five color themes**, animations, sounds, and an opening with a tune.
+
+## Install
+
+fungeo runs on macOS and Linux, on Intel and ARM. It is a single program with
+nothing else to install; the terminal needs UTF-8, which every current one has.
+
+### Homebrew (macOS and Linux)
+
+```sh
+brew install anwarahmed/tap/fungeo
+```
+
+Update with `brew upgrade fungeo`, remove with `brew uninstall fungeo`.
+
+### Install script
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/anwarahmed/fungeo/main/install.sh | sh
+```
+
+This downloads the latest release for your machine, checks its checksum, and puts it
+in `~/.local/bin` (set `FUNGEO_BIN_DIR` for somewhere else). A copy installed this
+way keeps itself up to date (see [Updates](#updates)). Where there is no prebuilt
+binary it builds from source instead, which needs Rust. To remove the game:
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/anwarahmed/fungeo/main/install.sh | sh -s -- --uninstall
+```
+
+### Arch Linux
+
+Each [release](https://github.com/anwarahmed/fungeo/releases/latest) carries a
+`PKGBUILD` for the package `fungeo-bin`. Download it into an empty directory and
+build:
+
+```sh
+curl -fsSLO https://github.com/anwarahmed/fungeo/releases/latest/download/PKGBUILD
+makepkg -si
+```
+
+Remove it with `sudo pacman -R fungeo-bin`. (The package is not in the AUR yet.)
+
+### From source
+
+Needs Rust 1.88 or newer.
+
+```sh
+git clone https://github.com/anwarahmed/fungeo
+cd fungeo
+cargo run --release
+```
+
+`./install.sh --source` builds and installs in one step; `./install.sh --link` links
+`~/.local/bin/fungeo` to the checkout's build, for development.
+
+## Updates
+
+| Installed with | How it updates |
+| -------------- | -------------- |
+| Install script | By itself: when it starts it checks for a newer release, at most once a day, installs it and restarts |
+| Homebrew       | `brew upgrade fungeo` |
+| Arch package   | Build the newer `PKGBUILD` the same way |
+| From source    | `git pull`, then build again |
+
+Only the install script's copy updates itself. A copy that Homebrew or pacman owns is
+marked as theirs when it is installed and never touches its own file, and neither does
+a build run from a checkout.
+
+For a copy that updates itself:
+
+```sh
+fungeo update        # check now and install a newer release
+fungeo update off    # stop checking at startup ("on" turns it back on)
+```
+
+`FUNGEO_NO_UPDATE=1` skips the check for one run. The check at startup happens at
+most once a day (`fungeo update` always checks), waits at most three seconds, and
+says nothing when you are offline. An update is verified against the release's
+SHA-256 checksum and never moves to an older version; if anything fails, the version
+you have starts as usual.
 
 ## Play
 
@@ -91,21 +173,23 @@ X: France | Spain | Italy
 
 `fungeo check` lists every category and says what is wrong with a file, by line.
 
-## From source
-
-Needs Rust 1.88 or newer.
-
-```sh
-cargo build --release
-target/release/fungeo
-```
-
 ## Files
 
 | What | Where |
 |---|---|
-| Settings, generated sound files | `~/.local/state/fungeo/` (`$XDG_STATE_HOME`) |
+| Settings, generated sound files, the time of the last update check | `~/.local/state/fungeo/` (`$XDG_STATE_HOME`) |
 | Your own questions | `~/.config/fungeo/questions/` (`$XDG_CONFIG_HOME`) |
+
+## Development
+
+```sh
+cargo test                                   # unit tests
+cargo clippy --all-targets -- -D warnings
+cargo build --release && tests/e2e.sh        # the built program in tmux, install.sh, the updater
+```
+
+[CLAUDE.md](CLAUDE.md) describes how the code is laid out and why, and
+[RELEASING.md](RELEASING.md) how a release is made.
 
 ## License
 

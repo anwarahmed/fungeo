@@ -8,12 +8,13 @@ parents; this file is for whoever changes the code.
 ## Commands
 
 ```sh
-cargo run --release                          # play
+cargo run --release                          # play (from a checkout it never updates itself)
 cargo run --release -- --no-intro -t night   # straight to the passport, in a theme
 cargo test                                   # unit tests: questions, rounds, app, drawing at seven window sizes, font, sound, settings, update
 cargo clippy --all-targets -- -D warnings    # no warnings allowed
 cargo fmt                                    # rustfmt.toml: max_width 160
 cargo run -- check [FILE...]                 # validate question files, list categories
+cargo build --release && tests/e2e.sh        # the built program in tmux, install.sh, the updater
 FUNGEO_LOG=/tmp/events.log cargo run         # record every key and mouse event received
 ```
 
@@ -21,15 +22,38 @@ FUNGEO_LOG=/tmp/events.log cargo run         # record every key and mouse event 
 `questions/*.txt` that `quiz.rs` includes, so a new built-in category is a new file
 and nothing else.
 
-## Status
+`install.sh` (POSIX sh, macOS + Linux) downloads the latest release binary into
+`~/.local/bin` (`FUNGEO_BIN_DIR` overrides) and verifies its checksum. `--source`
+builds instead (the checkout it is in, else a fresh clone), and it falls back to that
+when no binary exists for the platform. `--link` symlinks to the checkout's build,
+`--uninstall` removes it. It never installs Rust and never edits shell profiles.
+`FUNGEO_RELEASE_URL` points it, and the self-updater, at another download base (a
+`file://` directory holding `VERSION`, `SHA256SUMS` and a binary; `tests/e2e.sh` makes
+such directories).
 
-Not published yet (October 2026). The plan is the same as funchess and wordl: the
-`personal:publish-project` skill (GitHub repository, ruleset, CI, releases, install
-script, Homebrew tap, AUR package). `src/update.rs` is already here, copied from
-funchess with the names changed; it does nothing useful until there are releases, and
-a build from a checkout never updates itself. When publishing, add the Workflow and
-Releasing sections here the way funchess's `CLAUDE.md` has them, `install.sh`,
-`tests/e2e.sh`, and the README's install section.
+## Workflow
+
+- **`main` only accepts pull requests** (GitHub ruleset "Main"): no direct pushes, no
+  force-pushes, no deletion, no bypass for anyone. A PR needs these checks to pass,
+  matched by job name: `test (ubuntu-latest)`, `test (macos-latest)`, `msrv`,
+  `release checklist`. Renaming a CI job means updating the ruleset or PRs wait forever.
+  PRs are squash-merged.
+- **Local layout.** The user keeps this repo as a bare clone with one worktree per
+  branch: `~/Developer/GitHub/anwarahmed/fungeo/main` plus a sibling directory per
+  feature branch (`git worktree add -b <branch> <branch> origin/main` from the bare
+  repo). Remove the worktree and branch after the PR merges, then fast-forward `main`.
+- **Releasing** is merging a version bump; a merge without one publishes nothing.
+  **Follow [RELEASING.md](RELEASING.md) every time, every step.** The release PR's
+  description must carry its checklist with every line ticked (`gh pr create --body`
+  does not add it for you), or the `release checklist` check fails. Tick a line only
+  after doing what it says. Then do its "After merging" steps and report each one.
+- **Sibling repo:** https://github.com/anwarahmed/homebrew-tap holds the generated
+  Homebrew formula (`Formula/fungeo.rb`, written by its
+  `scripts/formulae/fungeo.sh`). It takes direct pushes, because its bot commits
+  formulae to `main`.
+- **Sister projects:** funchess, wordl and typeshelf (same owner) share this release workflow,
+  `install.sh` and `src/update.rs` design. A fix to any of those in one project belongs
+  in the others in the same sitting.
 
 ## Architecture
 
@@ -100,6 +124,16 @@ an `Action` with both a button and a key.
   input.
 - **Confetti is drawn behind everything** and sparkles in front, both only on empty
   cells, so neither covers a word.
+- **A click counts on press; a release with no press before it counts too**, in case
+  a terminal only reports the release. This came from funchess, where the user once
+  reported clicks not registering in foot under tmux. If it happens here, ask for a
+  `FUNGEO_LOG` recording before guessing.
+- **Self-update** is the sister projects' design exactly: a `VERSION` file from the
+  latest release (no GitHub API, so no rate limit), a `share/fungeo/managed-by` marker
+  by which Homebrew and pacman switch it off, and a check at most once a day
+  (`last-update-check` in the state directory). The release asset names
+  (`fungeo-<target>`, `SHA256SUMS`, `VERSION`, `PKGBUILD`) are a contract with
+  `install.sh`, the updater, the tap's formula generator and the AUR package.
 - **Colors** are 24-bit; without `COLORTERM=truecolor` the finished frame is mapped
   to the 256-color cube (`ui::indexed`).
 - **A deck per category and level** (`App::decks`) lasts for the session, so a second
@@ -116,11 +150,13 @@ an `Action` with both a button and a key.
 
 - `cargo test` draws every screen at seven sizes from 60x22 to 300x90 in all themes
   and plays whole rounds; a layout that puts a button off the window fails it.
-- To see it: run it in tmux on a **private socket** (`tmux -L fungeo-test ...`; never
-  the user's server), `capture-pane -p -e -N`, and turn that into a picture. The
-  script that does this for funchess is `docs/screenshot.sh` in that repository;
-  note its converter resets colors at each line and only knows `▀`, which is wrong
-  for this game (`▄`, `█`, and tmux carrying colors across lines).
+- `cargo build --release && tests/e2e.sh`: the real program in tmux on a private
+  socket, by keyboard and by mouse, a whole round, the sounds (through stand-in
+  players), and `install.sh` and the updater against made-up releases served from
+  `file://`. CI runs it on Linux and macOS.
+- To see it: `docs/screenshot.sh` runs it in tmux on a **private socket** (never the
+  user's server), captures the pane with its colors (`capture-pane -p -e -N`) and
+  draws that as a picture. Pass it a size and keys to look at any screen.
 - A scripted player cannot know the right answer; guessing `a` then `Enter` until
   "Cross!" appears finishes a round in about 30 tries. Check for "Cross!" between
   the two keys, or the `Enter` walks past the end.
@@ -130,7 +166,9 @@ an `Action` with both a button and a key.
 - The sounds were never heard by whoever made them: checked as numbers only. The
   intro tune's timing against the falling letters is by arithmetic.
 - The animations were only seen as captured frames, not live.
-- Never run on a Mac.
+- Never run by a person on a Mac; CI runs the tests there.
+- The AUR package `fungeo-bin` is rendered for each release but not pushed: the user
+  has no AUR account.
 - The big font has no lower case, and a question in a non-Latin script falls back to
   ordinary text.
 - No flags with emblems, crescents, cantons or diagonals, so many well-known flags

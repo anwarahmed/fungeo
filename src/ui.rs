@@ -148,7 +148,7 @@ fn button(buf: &mut Buffer, app: &mut App, r: Rect, action: Option<Action>, bg: 
                 put(buf, r.right() - 1, y, "◀", fg, 1);
             }
         }
-        Rect::new(r.x + 2.min(r.width), r.y, r.width.saturating_sub(4), r.height)
+        Rect::new(r.x + 1.min(r.width), r.y, r.width.saturating_sub(2), r.height)
     }
 }
 
@@ -482,20 +482,22 @@ fn intro(buf: &mut Buffer, app: &mut App, area: Rect) {
 fn settings(buf: &mut Buffer, app: &mut App, r: Rect, last: (&str, &str, Action)) {
     let theme = app.theme();
     let on = |b: bool| if b { "on" } else { "off" };
-    let items: [(&str, String, Action); 5] = [
-        ("T", format!("Theme: {}", theme.name), Action::Theme),
-        ("S", format!("Sound: {}", on(app.sound)), Action::Sound),
-        ("M", format!("Motion: {}", on(app.animations)), Action::Motion),
-        ("?", "Help".into(), Action::Help),
-        (last.0, last.1.into(), last.2),
+    // Each with a shorter way of saying it for a narrow window, which still shows
+    // which theme it is and what is switched off.
+    let items: [(&str, String, String, Action); 5] = [
+        ("T", format!("Theme: {}", theme.name), theme.name.into(), Action::Theme),
+        ("S", format!("Sound: {}", on(app.sound)), if app.sound { "Sound" } else { "Sound off" }.into(), Action::Sound),
+        ("M", format!("Motion: {}", on(app.animations)), if app.animations { "Motion" } else { "Motion off" }.into(), Action::Motion),
+        ("?", "Help".into(), "Help".into(), Action::Help),
+        (last.0, last.1.into(), last.1.into(), last.2),
     ];
     let each = (r.width / items.len() as u16).min(24);
     let x0 = r.x + (r.width - each * items.len() as u16) / 2;
-    for (i, (key, name, action)) in items.into_iter().enumerate() {
+    for (i, (key, name, short, action)) in items.into_iter().enumerate() {
         let at = Rect::new(x0 + i as u16 * each, r.y, each - 1, r.height);
         let bg = mix(theme.panel, theme.answers[i % 4], 0.35);
         let inside = button(buf, app, at, Some(action), bg, false);
-        let (long, short) = (format!("{key}  {name}"), name.split(':').next().unwrap_or(&name).to_string());
+        let long = format!("{key}  {name}");
         let text = if long.chars().count() as u16 <= inside.width { long } else { format!("{key} {short}") };
         label(buf, inside, &text, ink(bg), 0);
     }
