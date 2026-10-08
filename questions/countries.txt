@@ -1,0 +1,656 @@
+# Countries, their capitals and their continents.
+name: Countries
+color: #e8505b
+order: 1
+
+[easy]
+Q: What is the capital of France?
+A: Paris
+X: London | Rome | Madrid
+F: The Eiffel Tower in Paris was the tallest building in the world when it was new.
+
+Q: What is the capital of Japan?
+A: Tokyo
+X: Beijing | Seoul | Bangkok
+F: More people live in and around Tokyo than around any other city in the world.
+
+Q: What is the capital of Egypt?
+A: Cairo
+X: Athens | Dubai | Nairobi
+F: The great pyramids stand at the edge of Cairo, where the desert begins.
+
+Q: What is the capital of the United Kingdom?
+A: London
+X: Paris | Dublin | Berlin
+F: Big Ben is really the name of the great bell inside London's clock tower.
+
+Q: What is the capital of Italy?
+A: Rome
+X: Paris | Madrid | Athens
+F: Rome is more than 2,500 years old.
+
+Q: What is the capital of the United States?
+A: Washington, D.C.
+X: New York | Los Angeles | Chicago
+F: The President lives in the White House in Washington, D.C.
+
+Q: What is the capital of China?
+A: Beijing
+X: Tokyo | Seoul | Bangkok
+F: The Forbidden City in Beijing was the home of China's emperors for 500 years.
+
+Q: What is the capital of Spain?
+A: Madrid
+X: Lisbon | Rome | Paris
+F: Madrid is right in the middle of Spain.
+
+Q: What is the capital of Germany?
+A: Berlin
+X: Vienna | Paris | Warsaw
+F: A wall once cut Berlin in two. It came down in 1989.
+
+Q: What is the capital of Russia?
+A: Moscow
+X: Berlin | Warsaw | Rome
+F: The onion-shaped domes of Moscow are painted like sweets.
+
+Q: Which continent is Egypt in?
+A: Africa
+X: Asia | Europe | South America
+F: Africa has 54 countries, more than any other continent.
+
+Q: Which continent is Brazil in?
+A: South America
+X: Africa | Asia | Europe
+F: Brazil covers almost half of South America.
+
+Q: Which continent is China in?
+A: Asia
+X: Africa | Europe | North America
+F: Asia is the biggest continent. More than half of all people live there.
+
+Q: Which country is also a continent?
+A: Australia
+X: India | Canada | Brazil
+F: Australia is the smallest continent and one of the biggest countries.
+
+Q: How many continents are there?
+A: Seven
+X: Five | Six | Nine
+F: Asia, Africa, North America, South America, Antarctica, Europe and Australia.
+
+Q: Which country is shaped like a boot?
+A: Italy
+X: Spain | Greece | Norway
+F: The toe of Italy's boot looks as if it is kicking the island of Sicily.
+
+Q: Which is the biggest country in the world?
+A: Russia
+X: China | Canada | Brazil
+F: Russia is so wide that it has eleven time zones.
+
+[medium]
+Q: What is the capital of Canada?
+A: Ottawa
+X: Toronto | Vancouver | Montreal
+F: Many people guess Toronto, which is Canada's biggest city.
+
+Q: What is the capital of Australia?
+A: Canberra
+X: Sydney | Melbourne | Perth
+F: Canberra was built on purpose to be the capital, between Sydney and Melbourne.
+
+Q: What is the capital of India?
+A: New Delhi
+X: Mumbai | Kolkata | Karachi
+F: New Delhi is part of Delhi, one of the biggest cities in the world.
+
+Q: What is the capital of Brazil?
+A: Brasilia
+X: Rio de Janeiro | Sao Paulo | Buenos Aires
+F: From the air, Brasilia is shaped like an airplane.
+
+Q: What is the capital of Turkey?
+A: Ankara
+X: Istanbul | Athens | Cairo
+F: Istanbul is far bigger, but Ankara has been the capital since 1923.
+
+Q: What is the capital of Greece?
+A: Athens
+X: Rome | Istanbul | Cairo
+F: Athens is one of the oldest cities in the world, about 3,400 years old.
+
+Q: What is the capital of Saudi Arabia?
+A: Riyadh
+X: Jeddah | Dubai | Doha
+F: Riyadh grew from a small desert town into a city of millions in one lifetime.
+
+Q: What is the capital of Mexico?
+A: Mexico City
+X: Havana | Lima | Madrid
+F: Mexico City was built on top of an old Aztec city in the middle of a lake.
+
+Q: What is the capital of Argentina?
+A: Buenos Aires
+X: Santiago | Lima | Rio de Janeiro
+F: Buenos Aires means "good airs" or "fair winds" in Spanish.
+
+Q: What is the capital of South Korea?
+A: Seoul
+X: Tokyo | Beijing | Bangkok
+F: About half of all South Koreans live in or around Seoul.
+
+Q: What is the capital of Kenya?
+A: Nairobi
+X: Lagos | Cairo | Cape Town
+F: Nairobi has a park where wild lions and giraffes live right beside the city.
+
+Q: What is the capital of Pakistan?
+A: Islamabad
+X: Karachi | Lahore | Kabul
+F: Islamabad was built in the 1960s to be the new capital.
+
+Q: What is the capital of Thailand?
+A: Bangkok
+X: Hanoi | Manila | Jakarta
+F: The full name of Bangkok in Thai is one of the longest place names in the world.
+
+Q: What is the capital of Portugal?
+A: Lisbon
+X: Madrid | Porto | Barcelona
+F: Lisbon is the capital city farthest west on the mainland of Europe.
+
+Q: Which country has the most people?
+A: India
+X: China | United States | Indonesia
+F: India passed China in 2023. Each has more than 1,400 million people.
+
+Q: Which is the smallest country in the world?
+A: Vatican City
+X: Monaco | Malta | Singapore
+F: Vatican City is inside the city of Rome. You can walk across it in half an hour.
+
+Q: Which two countries share the longest border in the world?
+A: Canada and the USA
+X: Russia and China | India and China | Brazil and Argentina
+F: The border between Canada and the USA is almost 9,000 kilometres long.
+
+Q: Which country lies in both Europe and Asia?
+A: Turkey
+X: Spain | Egypt | India
+F: In Istanbul you can cross a bridge from Europe to Asia.
+
+[hard]
+Q: What is the capital of New Zealand?
+A: Wellington
+X: Auckland | Christchurch | Sydney
+F: Wellington is the capital city farthest south in the world.
+
+Q: What is the capital of Switzerland?
+A: Bern
+X: Zurich | Geneva | Vienna
+F: The bear is the symbol of Bern, and bears still live in a park in the city.
+
+Q: What is the capital of Nigeria?
+A: Abuja
+X: Lagos | Accra | Nairobi
+F: Lagos was the capital until 1991 and is still Nigeria's biggest city.
+
+Q: What is the capital of Morocco?
+A: Rabat
+X: Casablanca | Marrakesh | Tunis
+F: Casablanca is the biggest city in Morocco, but Rabat is the capital.
+
+Q: What is the capital of Vietnam?
+A: Hanoi
+X: Ho Chi Minh City | Bangkok | Manila
+F: Hanoi is more than a thousand years old.
+
+Q: What is the capital of Peru?
+A: Lima
+X: Cusco | Quito | Bogota
+F: It almost never rains in Lima, though it sits beside the ocean.
+
+Q: What is the capital of Mongolia?
+A: Ulaanbaatar
+X: Astana | Kathmandu | Tashkent
+F: Ulaanbaatar is the coldest capital city in the world.
+
+Q: What is the capital of Iceland?
+A: Reykjavik
+X: Oslo | Helsinki | Copenhagen
+F: Houses in Reykjavik are heated with hot water from under the ground.
+
+Q: What is the capital of Ethiopia?
+A: Addis Ababa
+X: Nairobi | Khartoum | Kampala
+F: Addis Ababa means "new flower".
+
+Q: What is the capital of Malaysia?
+A: Kuala Lumpur
+X: Singapore | Jakarta | Manila
+F: The twin Petronas Towers in Kuala Lumpur are joined by a bridge in the sky.
+
+Q: What is the capital of Kazakhstan?
+A: Astana
+X: Almaty | Tashkent | Bishkek
+F: Kazakhstan is the biggest country in the world that has no sea coast.
+
+Q: What is the capital of Bangladesh?
+A: Dhaka
+X: Kolkata | Kathmandu | Colombo
+F: Dhaka is one of the most crowded cities on Earth.
+
+Q: What is the capital of Chile?
+A: Santiago
+X: Valparaiso | Lima | Buenos Aires
+F: From Santiago you can see the snowy Andes mountains.
+
+Q: Which country has the most islands?
+A: Sweden
+X: Indonesia | Philippines | Japan
+F: Sweden has more than 200,000 islands. People live on fewer than a thousand of them.
+
+Q: How many capital cities does South Africa have?
+A: Three
+X: One | Two | Four
+F: Pretoria, Cape Town and Bloemfontein each do a different job.
+
+Q: Which is the biggest country in Africa?
+A: Algeria
+X: Egypt | Nigeria | South Africa
+F: Most of Algeria is the Sahara desert.
+
+Q: Which country has the longest coastline?
+A: Canada
+X: Australia | Russia | Norway
+F: Canada's coast is more than 200,000 kilometres long.
+
+Q: Which country is completely surrounded by South Africa?
+A: Lesotho
+X: Botswana | Namibia | Zimbabwe
+F: All of Lesotho is higher than 1,400 metres. It is called the Kingdom in the Sky.
+
+# More, added later. A level may be opened again.
+[easy]
+Q: Which continent is France in?
+A: Europe
+X: Asia | Africa | South America
+F: Europe is the second smallest continent, but it has about 45 countries.
+
+Q: Which continent is Canada in?
+A: North America
+X: South America | Europe | Asia
+F: Canada, the United States and Mexico are the three biggest countries there.
+
+Q: Which continent is India in?
+A: Asia
+X: Africa | Europe | Australia
+F: India is so big that it is called a subcontinent.
+
+Q: Which continent is Kenya in?
+A: Africa
+X: Asia | South America | Europe
+F: The Equator runs right across Kenya.
+
+Q: What is the capital of Ireland?
+A: Dublin
+X: London | Paris | Oslo
+F: Dublin's name comes from old words meaning "black pool".
+
+Q: What is the capital of the Netherlands?
+A: Amsterdam
+X: Brussels | Berlin | Copenhagen
+F: Amsterdam has more bicycles than people.
+
+Q: What is the capital of Scotland?
+A: Edinburgh
+X: Glasgow | Dublin | London
+F: Edinburgh Castle stands on top of an old volcano.
+
+Q: Which country is just north of the United States?
+A: Canada
+X: Mexico | Brazil | Cuba
+F: Most Canadians live close to the border with the United States.
+
+Q: Which country is just south of the United States?
+A: Mexico
+X: Canada | Peru | Spain
+F: More people speak Spanish in Mexico than in any other country.
+
+Q: Which country are the cities of Sydney and Melbourne in?
+A: Australia
+X: England | Canada | South Africa
+F: Sydney is Australia's biggest city, but not its capital.
+
+Q: Which country is the city of New York in?
+A: United States
+X: Canada | England | Australia
+F: New York is nicknamed the Big Apple.
+
+Q: Which country are the cities of Mumbai and Delhi in?
+A: India
+X: China | Egypt | Japan
+F: Mumbai's film studios are known as Bollywood.
+
+Q: Which of these countries is made of islands?
+A: Japan
+X: Germany | Egypt | Brazil
+F: Japan has more than 14,000 islands. Most people live on the four biggest.
+
+Q: Which is the biggest country in South America?
+A: Brazil
+X: Argentina | Peru | Chile
+F: Brazil touches every other country in South America but two.
+
+Q: Which is the biggest continent?
+A: Asia
+X: Africa | Europe | Antarctica
+F: Asia covers almost a third of all the land on Earth.
+
+Q: Which is the smallest continent?
+A: Australia
+X: Europe | Antarctica | South America
+F: Australia is an island, a country and a continent all at once.
+
+Q: What do we call the city where a country's government works?
+A: The capital
+X: The harbour | The village | The border
+F: The capital is not always the biggest city.
+
+Q: What is a map of the world in the shape of a ball called?
+A: A globe
+X: An atlas | A compass | A chart
+F: A book of maps is called an atlas.
+
+Q: Which direction is at the top of most maps?
+A: North
+X: South | East | West
+F: A compass needle always points north.
+
+Q: On a compass, which direction is opposite east?
+A: West
+X: North | South | Up
+F: The sun rises in the east and sets in the west.
+
+Q: Which country is the city of Rio de Janeiro in?
+A: Brazil
+X: Mexico | Spain | Portugal
+F: Rio is famous for its carnival and its beaches.
+
+Q: Which country is nicknamed "Down Under"?
+A: Australia
+X: Iceland | Chile | India
+F: It is called that because it lies far south, under the Equator.
+
+[medium]
+Q: What is the capital of Norway?
+A: Oslo
+X: Stockholm | Helsinki | Copenhagen
+F: The Nobel Peace Prize is given out in Oslo every year.
+
+Q: What is the capital of Sweden?
+A: Stockholm
+X: Oslo | Copenhagen | Helsinki
+F: Stockholm is built on fourteen islands joined by bridges.
+
+Q: What is the capital of Denmark?
+A: Copenhagen
+X: Oslo | Stockholm | Amsterdam
+F: Copenhagen has one of the oldest amusement parks in the world, Tivoli.
+
+Q: What is the capital of Finland?
+A: Helsinki
+X: Oslo | Stockholm | Riga
+F: In midsummer it hardly gets dark in Helsinki at all.
+
+Q: What is the capital of Belgium?
+A: Brussels
+X: Amsterdam | Paris | Luxembourg
+F: Many countries of Europe meet in Brussels to decide things together.
+
+Q: What is the capital of Austria?
+A: Vienna
+X: Salzburg | Berlin | Budapest
+F: Vienna is the city of music: Mozart and Beethoven both lived there.
+
+Q: What is the capital of Poland?
+A: Warsaw
+X: Krakow | Prague | Berlin
+F: Warsaw's old town was rebuilt brick by brick after the Second World War.
+
+Q: What is the capital of Hungary?
+A: Budapest
+X: Bucharest | Vienna | Prague
+F: Budapest is famous for its warm baths, fed by springs under the city.
+
+Q: What is the capital of Ukraine?
+A: Kyiv
+X: Moscow | Warsaw | Minsk
+F: Kyiv is more than 1,500 years old.
+
+Q: What is the capital of Iran?
+A: Tehran
+X: Baghdad | Kabul | Riyadh
+F: Snowy mountains rise right behind Tehran.
+
+Q: What is the capital of Iraq?
+A: Baghdad
+X: Tehran | Damascus | Cairo
+F: A thousand years ago Baghdad was the biggest city in the world.
+
+Q: What is the capital of the Philippines?
+A: Manila
+X: Jakarta | Bangkok | Hanoi
+F: The Philippines has more than 7,000 islands.
+
+Q: What is the capital of Cuba?
+A: Havana
+X: Kingston | Lima | Mexico City
+F: Havana is famous for its brightly painted old cars.
+
+Q: What is the capital of Colombia?
+A: Bogota
+X: Lima | Caracas | Quito
+F: Bogota is 2,600 metres up in the mountains.
+
+Q: What is the capital of Wales?
+A: Cardiff
+X: Swansea | Belfast | Dublin
+F: Wales has more castles for its size than any other country in Europe.
+
+Q: What is the capital of Nepal?
+A: Kathmandu
+X: Dhaka | Colombo | Kabul
+F: Eight of the ten highest mountains in the world are in Nepal.
+
+Q: How many countries make up the United Kingdom?
+A: Four
+X: Two | Three | Five
+F: England, Scotland, Wales and Northern Ireland.
+
+Q: Which country is the city of Dubai in?
+A: United Arab Emirates
+X: Saudi Arabia | Qatar | Egypt
+F: Sixty years ago Dubai was a small town of fishermen and pearl divers.
+
+Q: Which long, thin country runs down the west side of South America?
+A: Chile
+X: Peru | Argentina | Ecuador
+F: Chile is about 4,300 kilometres long and only about 180 wide.
+
+Q: Which country has the most people in Africa?
+A: Nigeria
+X: Egypt | South Africa | Kenya
+F: More than 200 million people live in Nigeria.
+
+Q: Which is the second biggest country in the world?
+A: Canada
+X: China | United States | Brazil
+F: Canada has more lakes than any other country.
+
+Q: What is a person who makes maps called?
+A: A cartographer
+X: A geologist | An astronomer | A navigator
+F: Today most maps are made from pictures taken by satellites.
+
+Q: Which country are the cities of Barcelona and Seville in?
+A: Spain
+X: Italy | Portugal | Mexico
+F: Spain and Portugal share a piece of land called the Iberian Peninsula.
+
+Q: Which country are the cities of Marrakesh and Casablanca in?
+A: Morocco
+X: Egypt | Tunisia | Turkey
+F: From Morocco you can see Spain across the sea, only 14 kilometres away.
+
+Q: Which continent has no countries?
+A: Antarctica
+X: Australia | Europe | Asia
+F: Nobody lives in Antarctica all their life. Scientists come and go.
+
+Q: The island of Bali is part of which country?
+A: Indonesia
+X: Thailand | India | Philippines
+F: Indonesia has more islands than any other country in Asia.
+
+Q: Which country in Asia is just one city on an island?
+A: Singapore
+X: Malaysia | Thailand | Vietnam
+F: Singapore is one of the busiest ports in the world.
+
+[hard]
+Q: What is the capital of Czechia?
+A: Prague
+X: Vienna | Budapest | Warsaw
+F: Prague has a clock, 600 years old, where little figures come out every hour.
+
+Q: What is the capital of Romania?
+A: Bucharest
+X: Budapest | Sofia | Belgrade
+F: People often mix up Bucharest in Romania and Budapest in Hungary.
+
+Q: What is the capital of Bulgaria?
+A: Sofia
+X: Bucharest | Athens | Belgrade
+F: Sofia is one of the oldest cities in Europe.
+
+Q: What is the capital of Croatia?
+A: Zagreb
+X: Split | Belgrade | Vienna
+F: Croatia has more than a thousand islands.
+
+Q: What is the capital of Serbia?
+A: Belgrade
+X: Zagreb | Sofia | Sarajevo
+F: Belgrade stands where two great rivers meet, the Danube and the Sava.
+
+Q: What is the capital of Jordan?
+A: Amman
+X: Damascus | Beirut | Baghdad
+F: Amman was first built on seven hills.
+
+Q: What is the capital of Lebanon?
+A: Beirut
+X: Amman | Damascus | Cairo
+F: A cedar tree is on Lebanon's flag.
+
+Q: What is the capital of Syria?
+A: Damascus
+X: Aleppo | Baghdad | Beirut
+F: People have lived in Damascus for longer than in almost any other city.
+
+Q: What is the capital of Qatar?
+A: Doha
+X: Dubai | Manama | Muscat
+F: Qatar sticks out into the sea like a thumb.
+
+Q: What is the capital of Oman?
+A: Muscat
+X: Doha | Sanaa | Riyadh
+F: Oman is famous for frankincense, a sweet-smelling tree sap.
+
+Q: What is the capital of Afghanistan?
+A: Kabul
+X: Islamabad | Tehran | Tashkent
+F: Kabul is one of the highest capital cities in the world.
+
+Q: What is the capital of Uzbekistan?
+A: Tashkent
+X: Samarkand | Astana | Bishkek
+F: Samarkand in Uzbekistan was a great city on the old Silk Road.
+
+Q: What is the capital of Myanmar?
+A: Naypyidaw
+X: Yangon | Mandalay | Bangkok
+F: Naypyidaw was built in secret and became the capital in 2005.
+
+Q: What is the capital of Tanzania?
+A: Dodoma
+X: Dar es Salaam | Nairobi | Arusha
+F: Dar es Salaam is much bigger, but Dodoma is the capital.
+
+Q: What is the capital of Ghana?
+A: Accra
+X: Lagos | Abuja | Dakar
+F: Accra lies on the coast of the Atlantic Ocean.
+
+Q: What is the capital of Senegal?
+A: Dakar
+X: Accra | Bamako | Rabat
+F: Dakar is on the tip of Africa that reaches farthest west.
+
+Q: What is the capital of Algeria?
+A: Algiers
+X: Tunis | Rabat | Tripoli
+F: Algiers is called "the White City" for its white buildings by the sea.
+
+Q: What is the capital of Tunisia?
+A: Tunis
+X: Tripoli | Algiers | Cairo
+F: The ruins of the ancient city of Carthage are just outside Tunis.
+
+Q: What is the capital of Venezuela?
+A: Caracas
+X: Bogota | Quito | Lima
+F: Venezuela means "little Venice".
+
+Q: What is the capital of Ecuador?
+A: Quito
+X: Lima | Bogota | La Paz
+F: Ecuador is named after the Equator, which passes close to Quito.
+
+Q: What is the capital of Uruguay?
+A: Montevideo
+X: Asuncion | Buenos Aires | Santiago
+F: Almost half the people of Uruguay live in Montevideo.
+
+Q: Which country has the most time zones, counting its faraway islands?
+A: France
+X: Russia | United States | China
+F: France has twelve, because it has islands in oceans all around the world.
+
+Q: San Marino is a tiny country completely surrounded by which country?
+A: Italy
+X: France | Spain | Switzerland
+F: San Marino says it is the oldest republic in the world.
+
+Q: Which country used to be called Persia?
+A: Iran
+X: Iraq | Turkey | Egypt
+F: The name was changed from Persia to Iran in 1935.
+
+Q: Which country used to be called Ceylon?
+A: Sri Lanka
+X: Myanmar | Thailand | Nepal
+F: Sri Lanka is shaped like a teardrop and is famous for its tea.
+
+Q: Which is the newest country in the world?
+A: South Sudan
+X: Kosovo | East Timor | Montenegro
+F: South Sudan became a country in 2011.
+
+Q: Which of these South American countries has no coast?
+A: Bolivia
+X: Chile | Peru | Ecuador
+F: Bolivia still has a navy. It sails on Lake Titicaca.

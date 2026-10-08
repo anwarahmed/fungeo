@@ -1,0 +1,275 @@
+# Flags that are stripes, crosses and circles: the ones a terminal can draw.
+# Without X lines, the wrong answers are the other countries of the same level.
+# No two flags may look the same (Indonesia and Monaco, Romania and Chad), so only
+# one of each such pair is here; a test checks it.
+name: Flags
+color: #3d7dd8
+order: 2
+ask: Whose flag is this?
+
+[easy]
+A: France
+P: flag v blue white red
+F: The French flag is called the Tricolore, which means "three colours".
+
+A: Italy
+P: flag v green white red
+F: A pizza Margherita has the colours of Italy's flag: basil, cheese and tomato.
+
+A: Germany
+P: flag h black red yellow
+F: Germany has more than 20,000 castles.
+
+A: Japan
+P: flag disc white red
+F: The red circle is the sun. Japan is called the Land of the Rising Sun.
+
+A: Ireland
+P: flag v green white orange
+F: Ireland is called the Emerald Isle because it is so green.
+
+A: Sweden
+P: flag nordic blue yellow
+F: This cross lying on its side is a Nordic cross. Five northern countries have one.
+
+A: Netherlands
+P: flag h red white blue
+F: A quarter of the Netherlands is below the level of the sea.
+
+A: Poland
+P: flag h white red
+F: Poland's flag is white over red. Indonesia's is the same colours the other way up.
+
+A: Ukraine
+P: flag h blue yellow
+F: Blue for the sky, and yellow for the fields of wheat under it.
+
+A: Russia
+P: flag h white blue red
+F: Russia is the biggest country in the world.
+
+A: Belgium
+P: flag v black yellow red
+F: Belgium is famous for chocolate and waffles.
+
+A: Switzerland
+P: flag plus red white
+F: The Swiss flag is square. Only Switzerland and Vatican City have square flags.
+
+A: Denmark
+P: flag nordic red white
+F: Denmark's flag is the oldest national flag still in use.
+
+A: Nigeria
+P: flag v green white green
+F: Nigeria has more people than any other country in Africa.
+
+A: Austria
+P: flag h red white red
+F: Austria lies in the Alps, and most of it is mountains.
+
+A: Finland
+P: flag nordic white blue
+F: Blue for Finland's thousands of lakes and white for its snow.
+
+[medium]
+A: Norway
+P: flag nordic red white navy
+F: Norway is famous for its fjords: long arms of the sea between high cliffs.
+
+A: Iceland
+P: flag nordic blue white red
+F: Iceland has volcanoes, hot springs and glaciers.
+
+A: Indonesia
+P: flag h red white
+F: Indonesia is made of more than 17,000 islands.
+
+A: Hungary
+P: flag h red white green
+F: Hungary's capital, Budapest, was once two towns, Buda and Pest, across a river.
+
+A: Bulgaria
+P: flag h white green red
+F: Bulgaria is famous for its fields of roses.
+
+A: Romania
+P: flag v blue yellow red
+F: Bran Castle in Romania is known as Dracula's castle.
+
+A: Peru
+P: flag v red white red
+F: Machu Picchu, an old city high in the mountains, is in Peru.
+
+A: Bangladesh
+P: flag disc #006a4e #f42a41 left
+F: The red circle sits a little to the left, so it looks centred when the flag flies.
+
+A: Colombia
+P: flag h yellow*2 blue red
+F: The yellow stripe is as big as the other two together.
+
+A: Thailand
+P: flag h red white navy*2 white red
+F: Thailand used to be called Siam.
+
+A: Estonia
+P: flag h #0072ce black white
+F: Estonia has more than 2,000 islands.
+
+A: Lithuania
+P: flag h #fdb913 #006a44 #c1272d
+F: Yellow for the sun, green for the forests and red for courage.
+
+A: United Arab Emirates
+P: flag bar red 25 green white black
+F: The tallest building in the world, the Burj Khalifa, is in the Emirates.
+
+A: Yemen
+P: flag h red white black
+F: Yemen is at the southern tip of Arabia.
+
+A: Mali
+P: flag v #14b53a #fcd116 #ce1126
+F: The old city of Timbuktu is in Mali.
+
+A: Ivory Coast
+P: flag v orange white #009e60
+F: More cocoa beans for chocolate grow in Ivory Coast than anywhere else.
+
+[hard]
+A: Guinea
+P: flag v #ce1126 #fcd116 #009460
+F: Guinea's flag has the colours of Mali's in the opposite order.
+
+A: Sierra Leone
+P: flag h #1eb53a white #0072c6
+F: Sierra Leone means "Lion Mountains".
+
+A: Gabon
+P: flag h #009e60 #fcd116 #3a75c4
+F: Most of Gabon is covered in rainforest.
+
+A: Armenia
+P: flag h #d90012 #0033a0 #f2a800
+F: Armenia is one of the oldest countries in the world.
+
+A: Costa Rica
+P: flag h navy white red*2 white navy
+F: Costa Rica means "rich coast". It has no army.
+
+A: Mauritius
+P: flag h #ea2839 #1a206d #ffd500 #00a551
+F: The dodo, a bird that could not fly, lived only on Mauritius.
+
+A: Latvia
+P: flag h maroon*2 white maroon*2
+F: About half of Latvia is covered in forest.
+
+A: Madagascar
+P: flag bar white 33 #fc3d32 #007e3a
+F: Lemurs live in the wild only on Madagascar.
+
+A: Benin
+P: flag bar #008751 40 #fcd116 #e8112d
+F: Benin is in West Africa, next to Nigeria.
+
+A: Palau
+P: flag disc #4aadd6 #ffde00 left
+F: Palau is more than 300 islands in the Pacific Ocean. The circle is the moon.
+
+A: Botswana
+P: flag h lightblue*9 white black*4 white lightblue*9
+F: The blue is for rain, which is precious in dry Botswana.
+
+A: Gambia
+P: flag h #ce1126*6 white #0c1c8c*4 white #3a7728*6
+F: The Gambia is the smallest country on the mainland of Africa.
+
+A: Bolivia
+P: flag h #d52b1e #f9e300 #007934
+F: Bolivia has the biggest salt flat in the world, as flat and white as a frozen lake.
+
+# Flags with a star, a circle or a triangle on them, after a +.
+[easy]
+A: India
+P: flag h #ff9933 white #138808 + disc navy 13
+F: The blue wheel in the middle has 24 spokes.
+
+A: Vietnam
+P: flag h #da251d #da251d + star yellow 30
+F: Vietnam is long and thin, shaped like the letter S.
+
+A: Argentina
+P: flag h lightblue white lightblue + disc #f6b40e 11
+F: The golden sun in the middle is called the Sun of May.
+
+[medium]
+A: Ghana
+P: flag h #ce1126 #fcd116 #006b3f + star black 16
+F: Ghana was once called the Gold Coast.
+
+A: Czechia
+P: flag h white #d7141a + triangle #11457e 50
+F: The Czech capital, Prague, is called the city of a hundred spires.
+
+A: Cuba
+P: flag h #002a8f white #002a8f white #002a8f + triangle #cf142b 40 + star white 12 14 50
+F: Cuba is the biggest island in the Caribbean Sea.
+
+A: Somalia
+P: flag h #4189dd #4189dd + star white 24
+F: Somalia has the longest coast on the mainland of Africa.
+
+A: Senegal
+P: flag v #00853f #fdef42 #e31b23 + star #00853f 16
+F: Senegal's capital, Dakar, is the city farthest west on the mainland of Africa.
+
+A: Cameroon
+P: flag v #007a5e #ce1126 #fcd116 + star #fcd116 14
+F: Cameroon has rainforest, desert, mountains and beaches, all in one country.
+
+[hard]
+A: Luxembourg
+P: flag h #ef3340 white #00a3e0
+F: Luxembourg's flag is like the Dutch one with a lighter blue.
+
+A: Laos
+P: flag h #ce1126 #002868*2 #ce1126 + disc white 20
+F: The white circle is the full moon over the Mekong river.
+
+A: Niger
+P: flag h #e05206 white #0db02b + disc #e05206 12
+F: The orange circle is the sun. Most of Niger is in the Sahara.
+
+A: Burkina Faso
+P: flag h #ef2b2d #009e49 + star #fcd116 17
+F: Burkina Faso means "land of honest people".
+
+A: Myanmar
+P: flag h #fecb00 #34b233 #ea2839 + star white 36
+F: Myanmar used to be called Burma.
+
+A: Suriname
+P: flag h #377e3f*2 white #b40a2d*4 white #377e3f*2 + star #ecc81d 18
+F: Suriname is the smallest country in South America.
+
+A: Sudan
+P: flag h #d21034 white black + triangle #007229 33
+F: Sudan has more pyramids than Egypt.
+
+A: Palestine
+P: flag h black white #007a3d + triangle #ce1126 33
+F: Jericho, in Palestine, is one of the oldest towns in the world.
+
+A: Bahamas
+P: flag h #00778b #ffc72c #00778b + triangle black 40
+F: The Bahamas are about 700 islands in clear, shallow sea.
+
+A: Guinea-Bissau
+P: flag bar #ce1126 33 #fcd116 #009e49 + star black 14 16 50
+F: Guinea-Bissau is famous for growing cashew nuts.
+
+A: Djibouti
+P: flag h #6ab2e7 #12ad2b + triangle white 40 + star #d7141a 11 14 50
+F: Lake Assal in Djibouti is the lowest place in Africa.

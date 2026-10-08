@@ -1,0 +1,631 @@
+# Oceans, rivers, mountains, deserts, and where animals live.
+name: Nature
+color: #3fa35b
+order: 3
+
+[easy]
+Q: Which is the biggest ocean?
+A: Pacific Ocean
+X: Atlantic Ocean | Indian Ocean | Arctic Ocean
+F: The Pacific covers almost a third of the whole Earth.
+
+Q: Where do kangaroos live in the wild?
+A: Australia
+X: Africa | India | Brazil
+F: A baby kangaroo is called a joey and rides in its mother's pouch.
+
+Q: On which continent do emperor penguins live?
+A: Antarctica
+X: Europe | Asia | North America
+F: Emperor penguin fathers keep the egg warm on their feet all winter.
+
+Q: Where do giant pandas live in the wild?
+A: China
+X: Japan | India | Australia
+F: A giant panda eats bamboo for about twelve hours a day.
+
+Q: On which continent do giraffes live in the wild?
+A: Africa
+X: Asia | Australia | Europe
+F: The giraffe is the tallest animal on Earth.
+
+Q: What is the tallest mountain in the world?
+A: Mount Everest
+X: Mount Kilimanjaro | Mont Blanc | Mount Fuji
+F: The top of Mount Everest is almost 9 kilometres above the sea.
+
+Q: What do we call a very dry place where it hardly ever rains?
+A: A desert
+X: A jungle | A swamp | An island
+F: Deserts can be hot or cold. What makes a desert is that it is dry.
+
+Q: Which is the coldest continent?
+A: Antarctica
+X: Europe | Asia | Australia
+F: Almost all of Antarctica is covered by ice, in places 4 kilometres thick.
+
+Q: What do we call land with water all around it?
+A: An island
+X: A mountain | A valley | A desert
+F: Some countries are islands, such as Iceland, Sri Lanka and Madagascar.
+
+Q: Where do polar bears live?
+A: The Arctic
+X: Antarctica | Africa | Australia
+F: Polar bears and penguins never meet: penguins live at the other end of the world.
+
+Q: What do we call a mountain that can throw out hot lava?
+A: A volcano
+X: A canyon | A glacier | A cave
+F: Lava is rock so hot that it has melted.
+
+Q: What covers most of the Earth?
+A: Water
+X: Sand | Forest | Ice
+F: Water covers about 71 parts in every 100 of the Earth.
+
+Q: Which is the biggest hot desert in the world?
+A: The Sahara
+X: The Gobi | The Kalahari | The Mojave
+F: The Sahara is almost as big as the whole United States.
+
+Q: On which continent do tigers live in the wild?
+A: Asia
+X: Africa | South America | Europe
+F: There are no wild tigers in Africa. Lions live there instead.
+
+Q: On which continent is the Amazon rainforest?
+A: South America
+X: Africa | Asia | Australia
+F: The Amazon is the biggest rainforest in the world.
+
+Q: How many oceans are there?
+A: Five
+X: Three | Four | Seven
+F: The Pacific, Atlantic, Indian, Southern and Arctic Oceans.
+
+[medium]
+Q: Which river carries the most water?
+A: The Amazon
+X: The Nile | The Mississippi | The Yangtze
+F: The Amazon carries more water than the next seven biggest rivers together.
+
+Q: Which river is usually called the longest in the world?
+A: The Nile
+X: The Danube | The Yangtze | The Mississippi
+F: The Nile is about 6,650 kilometres long. Some say the Amazon is a little longer.
+
+Q: What is the highest mountain in Africa?
+A: Mount Kilimanjaro
+X: Mount Kenya | Mount Everest | Table Mountain
+F: Kilimanjaro is an old volcano in Tanzania with snow on top, near the equator.
+
+Q: Where is the Great Barrier Reef?
+A: Australia
+X: Mexico | Japan | India
+F: It is the biggest thing on Earth built by living creatures: tiny corals.
+
+Q: Which is the smallest ocean?
+A: Arctic Ocean
+X: Indian Ocean | Southern Ocean | Atlantic Ocean
+F: Much of the Arctic Ocean is covered by floating ice.
+
+Q: On which island do lemurs live in the wild?
+A: Madagascar
+X: Sri Lanka | Iceland | Borneo
+F: Lemurs live nowhere else in the wild.
+
+Q: Which continent do llamas come from?
+A: South America
+X: Africa | Asia | Australia
+F: Llamas carry loads in the Andes mountains.
+
+Q: Which is the biggest island in the world?
+A: Greenland
+X: Madagascar | Iceland | Great Britain
+F: Australia is bigger, but it counts as a continent.
+
+Q: Mount Fuji is in which country?
+A: Japan
+X: China | South Korea | Nepal
+F: Mount Fuji is a volcano. It last erupted in 1707.
+
+Q: Which ocean lies between Europe and North America?
+A: Atlantic Ocean
+X: Pacific Ocean | Indian Ocean | Arctic Ocean
+F: The Atlantic gets a few centimetres wider every year.
+
+Q: What is the line around the middle of the Earth called?
+A: The Equator
+X: The Prime Meridian | The Arctic Circle | The Date Line
+F: Days and nights are about the same length all year at the Equator.
+
+Q: Where do orangutans live in the wild?
+A: Borneo and Sumatra
+X: Africa | South America | India
+F: Orangutan means "person of the forest" in Malay.
+
+Q: Mount Everest is in which range of mountains?
+A: The Himalayas
+X: The Alps | The Andes | The Rockies
+F: The Himalayas are still growing, by about a centimetre a year.
+
+Q: Which is the longest range of mountains on land?
+A: The Andes
+X: The Himalayas | The Rockies | The Alps
+F: The Andes run for about 7,000 kilometres down South America.
+
+Q: Which sea is so salty that people float in it easily?
+A: The Dead Sea
+X: The Red Sea | The Black Sea | The North Sea
+F: The shore of the Dead Sea is the lowest dry land on Earth.
+
+Q: The kiwi, a bird that cannot fly, comes from which country?
+A: New Zealand
+X: Australia | Fiji | South Africa
+F: New Zealanders are nicknamed Kiwis after the bird.
+
+[hard]
+Q: Which is the biggest desert of all, counting the cold ones?
+A: Antarctica
+X: The Sahara | The Gobi | The Arabian Desert
+F: Antarctica gets less rain and snow than the Sahara does.
+
+Q: What is the tallest waterfall in the world?
+A: Angel Falls
+X: Niagara Falls | Victoria Falls | Iguazu Falls
+F: Angel Falls in Venezuela drops 979 metres, three times the Eiffel Tower.
+
+Q: What is the deepest place in the ocean?
+A: The Mariana Trench
+X: The Java Trench | The Tonga Trench | The Puerto Rico Trench
+F: It is nearly 11 kilometres deep. Mount Everest would vanish in it.
+
+Q: Which is the biggest lake in the world?
+A: The Caspian Sea
+X: Lake Superior | Lake Victoria | Lake Baikal
+F: It is called a sea, but land surrounds it on every side.
+
+Q: Which is the deepest lake in the world?
+A: Lake Baikal
+X: Lake Tanganyika | Lake Superior | Lake Titicaca
+F: Lake Baikal in Russia holds about a fifth of the fresh water in all lakes and rivers.
+
+Q: Which is the longest river in Europe?
+A: The Volga
+X: The Danube | The Rhine | The Thames
+F: The Volga flows across Russia into the Caspian Sea.
+
+Q: Which is the longest river in Asia?
+A: The Yangtze
+X: The Ganges | The Mekong | The Indus
+F: The Yangtze flows 6,300 kilometres across China.
+
+Q: Which country has the most active volcanoes?
+A: Indonesia
+X: Japan | Iceland | Italy
+F: Indonesia lies on the Ring of Fire around the Pacific Ocean.
+
+Q: Which desert in South America is one of the driest places on Earth?
+A: The Atacama
+X: The Sahara | The Gobi | The Kalahari
+F: Parts of the Atacama in Chile have gone for years without a drop of rain.
+
+Q: Where do Komodo dragons live in the wild?
+A: Indonesia
+X: Australia | India | Madagascar
+F: The Komodo dragon is the biggest lizard in the world, up to 3 metres long.
+
+Q: What is the highest mountain in South America?
+A: Aconcagua
+X: Kilimanjaro | Denali | Mont Blanc
+F: Aconcagua in Argentina is the highest mountain outside Asia.
+
+Q: Denali is the highest mountain on which continent?
+A: North America
+X: South America | Asia | Europe
+F: Denali is in Alaska. Its name means "the high one".
+
+Q: Which is the biggest lake in Africa?
+A: Lake Victoria
+X: Lake Tanganyika | Lake Malawi | Lake Chad
+F: Lake Victoria is shared by Uganda, Kenya and Tanzania.
+
+Q: Which strait separates Asia from North America?
+A: The Bering Strait
+X: The Strait of Gibraltar | The Strait of Hormuz | The Strait of Magellan
+F: At its narrowest the Bering Strait is only about 85 kilometres wide.
+
+Q: Which river made the Grand Canyon?
+A: The Colorado
+X: The Mississippi | The Rio Grande | The Missouri
+F: The river took millions of years to cut a canyon more than a kilometre deep.
+
+Q: Which is the biggest island in the Mediterranean Sea?
+A: Sicily
+X: Sardinia | Cyprus | Crete
+F: Mount Etna on Sicily is one of the most active volcanoes in the world.
+
+Q: The Galapagos Islands, home of giant tortoises, belong to which country?
+A: Ecuador
+X: Peru | Chile | Mexico
+F: Galapago is an old Spanish word for tortoise.
+
+# More, added later. A level may be opened again.
+[easy]
+Q: Which is the biggest animal on Earth?
+A: The blue whale
+X: The elephant | The giraffe | The shark
+F: A blue whale's heart is as big as a small car.
+
+Q: Which animal is called the ship of the desert?
+A: The camel
+X: The horse | The elephant | The goat
+F: A camel can go for a week or more without a drink.
+
+Q: On which continent do zebras live in the wild?
+A: Africa
+X: Asia | Europe | South America
+F: Every zebra has its own pattern of stripes, like a fingerprint.
+
+Q: Where do koalas live in the wild?
+A: Australia
+X: China | Brazil | Canada
+F: Koalas eat eucalyptus leaves and sleep for about twenty hours a day.
+
+Q: What is frozen water called?
+A: Ice
+X: Steam | Sand | Fog
+F: Most of the fresh water on Earth is frozen in Antarctica.
+
+Q: What do we call a place covered with many trees?
+A: A forest
+X: A desert | A beach | A lake
+F: Forests give us much of the air we breathe.
+
+Q: What falls from the clouds as soft white flakes?
+A: Snow
+X: Rain | Sand | Leaves
+F: No two snowflakes are exactly alike.
+
+Q: Which season is the coldest?
+A: Winter
+X: Summer | Spring | Autumn
+F: When it is winter in Europe, it is summer in Australia.
+
+Q: What do we call a long stream of water flowing to the sea?
+A: A river
+X: A hill | A cloud | A road
+F: Most big cities were built beside a river.
+
+Q: What do we call water tumbling over a cliff?
+A: A waterfall
+X: A puddle | A pond | A wave
+F: You can hear a big waterfall long before you can see it.
+
+Q: What is the very top of a mountain called?
+A: The peak
+X: The valley | The shore | The cave
+F: It gets colder the higher you climb, so high peaks have snow all year.
+
+Q: What do we call the sandy land beside the sea?
+A: A beach
+X: A forest | A meadow | A cave
+F: Sand is rock and shells ground into tiny pieces by the waves.
+
+Q: Where does the sun rise?
+A: In the east
+X: In the west | In the north | In the south
+F: The sun does not really move across the sky. The Earth is turning.
+
+Q: Which is the hottest continent?
+A: Africa
+X: Europe | Antarctica | North America
+F: The Equator crosses the middle of Africa, where the sun is strongest.
+
+Q: Which ocean is at the top of the world, around the North Pole?
+A: Arctic Ocean
+X: Pacific Ocean | Indian Ocean | Atlantic Ocean
+F: There is no land at the North Pole, only ice floating on the sea.
+
+Q: Where is the South Pole?
+A: In Antarctica
+X: In Africa | In Australia | In the Arctic
+F: At the South Pole the sun stays up for six months and down for six.
+
+Q: Which bird cannot fly but is a wonderful swimmer?
+A: The penguin
+X: The eagle | The parrot | The owl
+F: Penguins use their wings as flippers, as if flying under water.
+
+Q: Where do elephants live in the wild?
+A: Africa and Asia
+X: Europe | Australia | North America
+F: African elephants have bigger ears than Asian ones.
+
+Q: What do we call a large body of salt water, smaller than an ocean?
+A: A sea
+X: A pond | A river | A stream
+F: Sea water is too salty to drink.
+
+Q: What do we call water with land all around it?
+A: A lake
+X: An island | A river | An ocean
+F: An island is the opposite: land with water all around it.
+
+Q: What shape is the Earth?
+A: Round like a ball
+X: Flat like a plate | Square like a box | Long like a pencil
+F: From space the Earth looks like a blue marble.
+
+Q: How long does the Earth take to go once around the Sun?
+A: One year
+X: One day | One week | One month
+F: That journey is why we have seasons.
+
+Q: What gives us day and night?
+A: The Earth spinning
+X: The Moon moving | Clouds passing | The wind blowing
+F: The Earth spins round once every 24 hours.
+
+[medium]
+Q: What is a river of slowly moving ice called?
+A: A glacier
+X: An iceberg | A geyser | A lagoon
+F: Glaciers carved out many of the world's valleys and lakes.
+
+Q: What is a huge piece of ice floating in the sea called?
+A: An iceberg
+X: A glacier | A reef | An atoll
+F: Only about a tenth of an iceberg shows above the water.
+
+Q: What do we call a spring that shoots hot water high into the air?
+A: A geyser
+X: A volcano | A glacier | A delta
+F: The word comes from Geysir, a hot spring in Iceland.
+
+Q: What is the land called where a river fans out to meet the sea?
+A: A delta
+X: A canyon | A peninsula | A plateau
+F: The Nile's delta is shaped like a triangle.
+
+Q: What do we call land with water on three sides?
+A: A peninsula
+X: An island | A delta | A valley
+F: Italy, Florida and Korea are all peninsulas.
+
+Q: What is a group of islands called?
+A: An archipelago
+X: A peninsula | A continent | A lagoon
+F: Indonesia, Japan and the Philippines are archipelagos.
+
+Q: What is a deep valley with steep sides, cut by a river?
+A: A canyon
+X: A delta | A dune | A plain
+F: The Grand Canyon is so big that it can be seen from space.
+
+Q: What is a hill of sand made by the wind?
+A: A dune
+X: A reef | A cliff | A geyser
+F: Some dunes in the Sahara are taller than a fifty-floor building.
+
+Q: What do we call it when the ground suddenly shakes?
+A: An earthquake
+X: A tornado | A flood | An avalanche
+F: The Earth's crust is made of great plates that push against each other.
+
+Q: What is a giant wave made by an earthquake under the sea?
+A: A tsunami
+X: A tornado | A hurricane | A geyser
+F: Tsunami is a Japanese word meaning "harbour wave".
+
+Q: What is a spinning funnel of wind that reaches the ground?
+A: A tornado
+X: A tsunami | An avalanche | A monsoon
+F: The winds in a tornado are the fastest on Earth.
+
+Q: Niagara Falls is on the border of which two countries?
+A: Canada and the USA
+X: USA and Mexico | Brazil and Argentina | France and Spain
+F: Boats take visitors right up to the foot of the falls.
+
+Q: Which river flows through London?
+A: The Thames
+X: The Seine | The Danube | The Rhine
+F: More than thirty bridges cross the Thames in London.
+
+Q: Which river flows through Paris?
+A: The Seine
+X: The Thames | The Rhine | The Volga
+F: The oldest part of Paris is an island in the Seine.
+
+Q: Which river in India is holy to Hindus?
+A: The Ganges
+X: The Indus | The Mekong | The Nile
+F: The Ganges begins in the ice of the Himalayas.
+
+Q: Which mountains are shared by France, Switzerland, Italy and Austria?
+A: The Alps
+X: The Andes | The Rockies | The Urals
+F: The Alps are the highest mountains in western Europe.
+
+Q: Which mountains run down the west of North America?
+A: The Rockies
+X: The Alps | The Andes | The Himalayas
+F: The Rocky Mountains stretch from Canada almost to Mexico.
+
+Q: On which continent do gorillas live in the wild?
+A: Africa
+X: Asia | South America | Australia
+F: Gorillas are the biggest apes. They eat mostly leaves and stems.
+
+Q: Where do sloths live in the wild?
+A: Central and South America
+X: Africa | Asia | Australia
+F: A sloth moves so slowly that green plants grow in its fur.
+
+Q: Where do reindeer live in the wild?
+A: Near the Arctic
+X: In the Sahara | In the Amazon | In Australia
+F: Both father and mother reindeer grow antlers.
+
+Q: Which ocean lies between Africa and Australia?
+A: Indian Ocean
+X: Atlantic Ocean | Arctic Ocean | Pacific Ocean
+F: The Indian Ocean is the warmest of the oceans.
+
+Q: Which ocean surrounds Antarctica?
+A: Southern Ocean
+X: Arctic Ocean | Indian Ocean | Atlantic Ocean
+F: The stormiest seas in the world are in the Southern Ocean.
+
+Q: Which line divides the world into east and west?
+A: The Prime Meridian
+X: The Equator | The Arctic Circle | The Tropic of Cancer
+F: The Prime Meridian passes through Greenwich in London.
+
+Q: What do we call a forest where it rains nearly every day?
+A: A rainforest
+X: A savanna | A tundra | A prairie
+F: More than half of all kinds of animals and plants live in rainforests.
+
+Q: What is the grassy plain of Africa, with only a few trees, called?
+A: The savanna
+X: The tundra | The rainforest | The swamp
+F: Lions, zebras, giraffes and elephants all live on the savanna.
+
+Q: What is the cold, treeless land around the Arctic called?
+A: The tundra
+X: The savanna | The jungle | The prairie
+F: Under the tundra the ground stays frozen all year round.
+
+Q: Which big sea lies between Europe and Africa?
+A: The Mediterranean Sea
+X: The Black Sea | The Red Sea | The Baltic Sea
+F: Mediterranean means "in the middle of the land".
+
+[hard]
+Q: Victoria Falls is on which river?
+A: The Zambezi
+X: The Congo | The Niger | The Nile
+F: The local name for the falls means "the smoke that thunders".
+
+Q: Which mountains divide Europe from Asia?
+A: The Urals
+X: The Alps | The Carpathians | The Pyrenees
+F: The Ural mountains run for 2,500 kilometres across Russia.
+
+Q: What is the highest mountain in Europe?
+A: Mount Elbrus
+X: Mont Blanc | The Matterhorn | Mount Olympus
+F: Mount Elbrus, in Russia, is an old volcano 5,642 metres high.
+
+Q: What is the highest mountain in the Alps?
+A: Mont Blanc
+X: The Matterhorn | Mount Etna | Ben Nevis
+F: Mont Blanc means "white mountain".
+
+Q: What is the second highest mountain in the world?
+A: K2
+X: Kangchenjunga | Lhotse | Makalu
+F: K2 is harder to climb than Everest.
+
+Q: Which is the second biggest island in the world?
+A: New Guinea
+X: Borneo | Madagascar | Sumatra
+F: New Guinea is shared by Indonesia and Papua New Guinea.
+
+Q: Which is the longest river in Australia?
+A: The Murray
+X: The Swan | The Yarra | The Brisbane
+F: The Murray begins in mountains called the Australian Alps.
+
+Q: Which river flows through more countries than any other?
+A: The Danube
+X: The Rhine | The Volga | The Amazon
+F: The Danube passes through ten countries and four capital cities.
+
+Q: Which big lake, shared by Peru and Bolivia, is high in the Andes?
+A: Lake Titicaca
+X: Lake Victoria | Lake Baikal | Lake Geneva
+F: Lake Titicaca is 3,800 metres up. People live there on floating islands of reeds.
+
+Q: Which is the biggest freshwater lake in the world?
+A: Lake Superior
+X: Lake Victoria | Lake Baikal | Lake Michigan
+F: Lake Superior is the biggest by area. Lake Baikal holds more water.
+
+Q: Which desert covers much of Mongolia and northern China?
+A: The Gobi
+X: The Kalahari | The Atacama | The Mojave
+F: Many dinosaur eggs and bones have been found in the Gobi.
+
+Q: Which desert covers much of Botswana in southern Africa?
+A: The Kalahari
+X: The Gobi | The Sahara | The Atacama
+F: After rain the Kalahari turns green and flowers bloom.
+
+Q: What is the ring of volcanoes around the Pacific Ocean called?
+A: The Ring of Fire
+X: The Fire Belt | The Lava Line | The Hot Circle
+F: Most of the world's volcanoes and earthquakes are on the Ring of Fire.
+
+Q: What do we call the single giant continent of long, long ago?
+A: Pangaea
+X: Atlantis | Eurasia | Oceania
+F: The continents drifted apart over 200 million years, and are still moving.
+
+Q: Which tropic lies north of the Equator?
+A: Tropic of Cancer
+X: Tropic of Capricorn | Tropic of Leo | Tropic of Orion
+F: The Tropic of Capricorn lies the same distance to the south.
+
+Q: Where do snow leopards live in the wild?
+A: Mountains of Central Asia
+X: The Andes | The Alps | The Rocky Mountains
+F: A snow leopard's long, thick tail keeps it warm like a scarf.
+
+Q: Tasmania, home of the Tasmanian devil, is an island of which country?
+A: Australia
+X: New Zealand | Indonesia | South Africa
+F: Tasmanian devils are named after their fierce screeching at night.
+
+Q: The capybara, the world's biggest rodent, lives on which continent?
+A: South America
+X: Africa | Asia | Australia
+F: A capybara can weigh as much as a grown person and loves to swim.
+
+Q: Where do narwhals, the whales with one long tusk, live?
+A: The Arctic Ocean
+X: The Indian Ocean | The Southern Ocean | The Mediterranean Sea
+F: The narwhal's tusk is really a tooth that can grow three metres long.
+
+Q: The Empty Quarter is a sea of sand on which peninsula?
+A: The Arabian Peninsula
+X: The Iberian Peninsula | The Korean Peninsula | The Balkan Peninsula
+F: The Empty Quarter is the biggest stretch of unbroken sand in the world.
+
+Q: The biggest river delta in the world is mostly in which country?
+A: Bangladesh
+X: Egypt | Vietnam | Brazil
+F: The Ganges and the Brahmaputra meet there. Bengal tigers live in its forests.
+
+Q: Which African river crosses the Equator twice?
+A: The Congo
+X: The Nile | The Niger | The Zambezi
+F: The Congo is the deepest river in the world.
+
+Q: Mount Vesuvius, the volcano that buried Pompeii, is in which country?
+A: Italy
+X: Greece | Spain | Turkey
+F: Vesuvius buried the town of Pompeii in ash almost 2,000 years ago.
+
+Q: What is the layer of air around the Earth called?
+A: The atmosphere
+X: The crust | The mantle | The ocean
+F: The atmosphere keeps us warm and shields us from the sun's rays.
+
+Q: What is the centre of the Earth called?
+A: The core
+X: The crust | The mantle | The shell
+F: The Earth's core is as hot as the surface of the Sun.

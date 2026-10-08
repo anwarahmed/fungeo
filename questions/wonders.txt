@@ -1,0 +1,696 @@
+# Famous places, and how people around the world speak, eat and live.
+name: Wonders
+color: #f0a030
+order: 4
+
+[easy]
+Q: In which country are the great pyramids of Giza?
+A: Egypt
+X: Mexico | India | Greece
+F: The pyramids were built about 4,500 years ago.
+
+Q: In which city is the Eiffel Tower?
+A: Paris
+X: London | Rome | New York
+F: The Eiffel Tower grows about 15 centimetres taller on a hot summer day.
+
+Q: In which country is the Great Wall?
+A: China
+X: Japan | India | Russia
+F: With all its branches, the Great Wall is more than 21,000 kilometres long.
+
+Q: In which city is the Statue of Liberty?
+A: New York
+X: Paris | London | Sydney
+F: The statue was a present from the people of France.
+
+Q: In which country do people say "Bonjour" for hello?
+A: France
+X: Spain | Italy | Germany
+F: Bonjour means "good day".
+
+Q: Which country does sushi come from?
+A: Japan
+X: Mexico | Italy | Egypt
+F: Sushi is rice with fish or vegetables, often wrapped in seaweed.
+
+Q: Which country does pizza come from?
+A: Italy
+X: China | Brazil | India
+F: Pizza as we know it was first made in the city of Naples.
+
+Q: In which country do people say "Hola" for hello?
+A: Spain
+X: France | Japan | Russia
+F: Spanish is spoken in Spain and in most of Central and South America.
+
+Q: In which city is the clock tower with the bell called Big Ben?
+A: London
+X: Paris | New York | Rome
+F: Big Ben has rung the hours for more than 160 years.
+
+Q: In which country is the Taj Mahal?
+A: India
+X: Egypt | China | Turkey
+F: The Taj Mahal is made of white marble and took about twenty years to build.
+
+Q: Which city has an Opera House that looks like sails?
+A: Sydney
+X: Tokyo | Paris | Cairo
+F: The roof of the Sydney Opera House is covered with more than a million tiles.
+
+Q: Which language do most people speak in Egypt, Morocco and Saudi Arabia?
+A: Arabic
+X: Spanish | Chinese | Hindi
+F: Arabic is written from right to left.
+
+Q: Which country are tacos from?
+A: Mexico
+X: Japan | Italy | Russia
+F: A taco is a folded tortilla, a thin flat bread made of maize or wheat.
+
+Q: In which city is the Colosseum?
+A: Rome
+X: Athens | Paris | Cairo
+F: The Colosseum held about 50,000 people, like a football stadium today.
+
+Q: In which city is the Kaaba?
+A: Mecca
+X: Medina | Cairo | Jerusalem
+F: Millions of Muslims travel to Mecca every year for the Hajj.
+
+Q: Which country has a famous tower that leans?
+A: Italy
+X: France | Spain | Greece
+F: The Leaning Tower of Pisa began to lean while it was still being built.
+
+[medium]
+Q: In which country is Machu Picchu?
+A: Peru
+X: Mexico | Brazil | Chile
+F: The Incas built Machu Picchu high in the Andes about 600 years ago.
+
+Q: Which Italian city has canals instead of roads?
+A: Venice
+X: Rome | Milan | Naples
+F: Venice is built on more than 100 small islands joined by bridges.
+
+Q: Which language do the most people speak as their first language?
+A: Mandarin Chinese
+X: English | Spanish | Hindi
+F: Close to a thousand million people grow up speaking Mandarin.
+
+Q: Which language do people speak in Brazil?
+A: Portuguese
+X: Spanish | French | English
+F: Brazil is the only country in South America where Portuguese is the main language.
+
+Q: Which city has a giant statue called Christ the Redeemer on a mountain?
+A: Rio de Janeiro
+X: Lisbon | Buenos Aires | Mexico City
+F: The statue is 30 metres tall and its arms stretch 28 metres wide.
+
+Q: In which country is Petra, the city carved out of rose-red rock?
+A: Jordan
+X: Egypt | Greece | India
+F: Petra was a rich trading city two thousand years ago.
+
+Q: In which country is the circle of giant stones called Stonehenge?
+A: England
+X: Ireland | France | Norway
+F: Nobody knows for sure how the stones were moved, about 4,500 years ago.
+
+Q: In which city is the Burj Khalifa, the tallest building in the world?
+A: Dubai
+X: New York | Shanghai | Tokyo
+F: The Burj Khalifa is 828 metres tall, with more than 160 floors.
+
+Q: In which city is the ancient temple called the Parthenon?
+A: Athens
+X: Rome | Istanbul | Cairo
+F: The Parthenon has stood on its hill above Athens for about 2,400 years.
+
+Q: Which country is famous for tulips, windmills and wooden shoes?
+A: The Netherlands
+X: Denmark | Switzerland | Belgium
+F: The wooden shoes are called clogs and kept feet dry in muddy fields.
+
+Q: In which country do people greet each other with "Namaste"?
+A: India
+X: Japan | Egypt | Brazil
+F: People often press their hands together when they say Namaste.
+
+Q: The kilt is the traditional dress of which country?
+A: Scotland
+X: Ireland | Norway | Germany
+F: The checked pattern of a kilt is called tartan.
+
+Q: In which city are the Hagia Sophia and the Blue Mosque?
+A: Istanbul
+X: Athens | Cairo | Baghdad
+F: The Hagia Sophia is almost 1,500 years old.
+
+Q: In which city is the Golden Gate Bridge?
+A: San Francisco
+X: New York | Sydney | London
+F: The bridge is not gold but orange, so ships can see it in the fog.
+
+Q: In which country did the Olympic Games begin?
+A: Greece
+X: Italy | Egypt | China
+F: The first Olympic Games we know of were held in Greece in 776 BC.
+
+Q: Which country gave the Statue of Liberty to the United States?
+A: France
+X: England | Spain | Italy
+F: The statue crossed the ocean in 350 pieces packed in crates.
+
+Q: Paella, a dish of rice cooked in a wide pan, comes from which country?
+A: Spain
+X: Italy | Mexico | Greece
+F: Paella is named after the pan it is cooked in.
+
+[hard]
+Q: In which country is the temple of Angkor Wat?
+A: Cambodia
+X: Thailand | India | Vietnam
+F: Angkor Wat is on Cambodia's flag.
+
+Q: In which country is the palace called the Alhambra?
+A: Spain
+X: Morocco | Italy | Turkey
+F: The Alhambra in Granada is famous for its carved walls and its fountains.
+
+Q: Easter Island, with its giant stone heads, belongs to which country?
+A: Chile
+X: Peru | New Zealand | Fiji
+F: The statues are called moai. There are nearly a thousand of them.
+
+Q: In which country is the old Maya city of Chichen Itza?
+A: Mexico
+X: Peru | Brazil | Spain
+F: A clap in front of its great pyramid echoes back like the chirp of a bird.
+
+Q: In which city are the Dome of the Rock and Al-Aqsa Mosque?
+A: Jerusalem
+X: Mecca | Damascus | Cairo
+F: Jerusalem is a holy city for Muslims, Christians and Jews.
+
+Q: In which city is the Sagrada Familia, a church still being built after 140 years?
+A: Barcelona
+X: Madrid | Rome | Lisbon
+F: Building began in 1882. Its architect, Gaudi, knew he would never see it finished.
+
+Q: In which country is Timbuktu, once a famous city of learning?
+A: Mali
+X: Egypt | Kenya | Morocco
+F: Hundreds of years ago Timbuktu had libraries with many thousands of books.
+
+Q: Which country has the most languages?
+A: Papua New Guinea
+X: India | China | Nigeria
+F: More than 800 languages are spoken in Papua New Guinea.
+
+Q: "Jambo" means hello in Swahili. Where is Swahili spoken?
+A: East Africa
+X: South America | Eastern Europe | Southeast Asia
+F: Swahili is spoken in Kenya, Tanzania and the countries around them.
+
+Q: In which city is Saint Basil's Cathedral, with domes like colourful onions?
+A: Moscow
+X: Prague | Istanbul | Vienna
+F: Every one of its domes has a different pattern.
+
+Q: Which city is built on two continents?
+A: Istanbul
+X: Cairo | Moscow | Dubai
+F: Part of Istanbul is in Europe and part is in Asia, with the sea between.
+
+Q: The haka is a dance of the Maori people of which country?
+A: New Zealand
+X: Australia | Hawaii | Japan
+F: New Zealand's rugby team performs a haka before every match.
+
+Q: In which city is the Forbidden City?
+A: Beijing
+X: Tokyo | Seoul | Bangkok
+F: For 500 years ordinary people were forbidden to go in.
+
+Q: Which of the Seven Wonders of the ancient world is still standing?
+A: The Great Pyramid
+X: The Colossus of Rhodes | The Hanging Gardens | The Lighthouse of Alexandria
+F: The Great Pyramid of Giza is the oldest of the seven, and the only one left.
+
+Q: In which country is Neuschwanstein, the castle that looks like a fairy tale?
+A: Germany
+X: France | Austria | Switzerland
+F: The castle in Disney's Sleeping Beauty was modelled on Neuschwanstein.
+
+Q: Which two oceans does the Panama Canal join?
+A: Atlantic and Pacific
+X: Indian and Pacific | Atlantic and Indian | Arctic and Atlantic
+F: Ships using the canal save a journey of about 13,000 kilometres around South America.
+
+Q: In which country is the Suez Canal?
+A: Egypt
+X: Panama | Turkey | Saudi Arabia
+F: The Suez Canal lets ships go from Europe to Asia without sailing around Africa.
+
+# More, added later. A level may be opened again.
+[easy]
+Q: The kimono is a traditional robe from which country?
+A: Japan
+X: Mexico | Egypt | Norway
+F: A kimono is tied with a wide belt called an obi.
+
+Q: In which country do people say "Ni hao" for hello?
+A: China
+X: Japan | India | Russia
+F: Chinese is written with thousands of different characters instead of an alphabet.
+
+Q: In which country do people say "Ciao" for hello and goodbye?
+A: Italy
+X: Spain | Greece | Germany
+F: Ciao is said like "chow".
+
+Q: In which country do people say "Guten Tag" for hello?
+A: Germany
+X: France | Spain | Greece
+F: Guten Tag means "good day".
+
+Q: What does the greeting "As-salamu alaykum" mean?
+A: Peace be upon you
+X: Good morning | Thank you | See you later
+F: The answer to it is "Wa alaykum as-salam": and upon you be peace.
+
+Q: Croissants and baguettes come from which country?
+A: France
+X: Japan | Mexico | Egypt
+F: A baguette is a long, thin loaf of bread. The word means "stick".
+
+Q: In which of these countries do people usually eat with chopsticks?
+A: China
+X: Mexico | Egypt | Italy
+F: Chopsticks have been used in China for more than 3,000 years.
+
+Q: Which country has a red maple leaf on its flag?
+A: Canada
+X: Brazil | India | Egypt
+F: Canada makes most of the world's maple syrup.
+
+Q: Which country is famous for chocolate, cheese with holes and cuckoo clocks?
+A: Switzerland
+X: Brazil | Egypt | Japan
+F: Swiss people eat more chocolate than almost anyone else.
+
+Q: The Great Sphinx has a lion's body and a person's head. Where is it?
+A: Egypt
+X: Greece | India | Peru
+F: The Sphinx was carved out of one huge rock about 4,500 years ago.
+
+Q: Hollywood, where many films are made, is in which country?
+A: United States
+X: England | India | Australia
+F: Hollywood is part of the city of Los Angeles.
+
+Q: The boomerang comes from which country?
+A: Australia
+X: Canada | Kenya | Japan
+F: A boomerang thrown the right way flies in a circle and comes back.
+
+Q: What is an igloo made of?
+A: Snow
+X: Wood | Stone | Straw
+F: Inside an igloo it is much warmer than outside.
+
+Q: Which country is famous for samba dancing and a huge carnival?
+A: Brazil
+X: Japan | Russia | Egypt
+F: Millions of people dance in the streets at the carnival in Rio.
+
+Q: What language do most people speak in Mexico?
+A: Spanish
+X: Mexican | English | Portuguese
+F: Spanish is spoken in about twenty countries.
+
+Q: What language do most people speak in Australia?
+A: English
+X: Australian | French | Dutch
+F: English is spoken in more countries than any other language.
+
+Q: Spicy curries and naan bread come from which country?
+A: India
+X: Italy | Mexico | Norway
+F: India grows more spices than any other country.
+
+Q: What is the month called when Muslims fast from dawn to sunset?
+A: Ramadan
+X: Hajj | Eid | Friday
+F: The festival at the end of Ramadan is called Eid al-Fitr.
+
+Q: What is the building where Muslims go to pray called?
+A: A mosque
+X: A castle | A museum | A palace
+F: The tall tower of a mosque is called a minaret.
+
+Q: Which country is the city of Mecca in?
+A: Saudi Arabia
+X: Egypt | Turkey | Morocco
+F: Saudi Arabia covers most of the Arabian Peninsula.
+
+Q: The sombrero, a hat with a very wide brim, comes from which country?
+A: Mexico
+X: Japan | Russia | Kenya
+F: Sombrero comes from the Spanish word for shade.
+
+Q: Which country is famous for fish and chips and afternoon tea?
+A: England
+X: Italy | China | Brazil
+F: Tea first came to England from China, about 350 years ago.
+
+[medium]
+Q: The Mona Lisa hangs in the Louvre museum in which city?
+A: Paris
+X: Rome | London | Madrid
+F: The Mona Lisa was painted by Leonardo da Vinci more than 500 years ago.
+
+Q: Flamenco, with its guitars and stamping feet, is a dance from which country?
+A: Spain
+X: Italy | Brazil | Greece
+F: Flamenco dancers click castanets and clap along to the music.
+
+Q: A yurt is a round tent that families live in. Which country is it from?
+A: Mongolia
+X: Mexico | Egypt | Norway
+F: A yurt can be packed up and carried to a new place on camels or horses.
+
+Q: Diwali, the festival of lights, comes from which country?
+A: India
+X: China | Brazil | Russia
+F: At Diwali, homes are lit with rows of little oil lamps.
+
+Q: Dragon dances and red envelopes are part of the New Year in which country?
+A: China
+X: India | Egypt | Mexico
+F: Each Chinese year is named after one of twelve animals.
+
+Q: The tango is a dance from which country?
+A: Argentina
+X: Spain | Italy | Cuba
+F: The tango began in the streets of Buenos Aires.
+
+Q: Sumo wrestling is the national sport of which country?
+A: Japan
+X: China | Mongolia | Russia
+F: Sumo wrestlers throw salt into the ring before a match.
+
+Q: In which country were the rules of football first written down?
+A: England
+X: Brazil | Italy | Germany
+F: The rules were agreed in London in 1863.
+
+Q: Lapland, where reindeer pull sleighs, is in the north of which country?
+A: Finland
+X: Iceland | Canada | Russia
+F: In Lapland the sun does not rise at all for weeks in winter.
+
+Q: In which city is the Brandenburg Gate?
+A: Berlin
+X: Vienna | Munich | Prague
+F: The gate once stood beside the wall that divided Berlin.
+
+Q: In which city does a statue of the Little Mermaid sit on a rock by the sea?
+A: Copenhagen
+X: Oslo | Stockholm | Amsterdam
+F: The story of the Little Mermaid was written by a Dane, Hans Christian Andersen.
+
+Q: In which city is the CN Tower?
+A: Toronto
+X: New York | Chicago | Sydney
+F: The CN Tower has a glass floor 342 metres above the ground.
+
+Q: Table Mountain, with its flat top, looks over which city?
+A: Cape Town
+X: Nairobi | Cairo | Lagos
+F: The cloud that often covers Table Mountain is called its tablecloth.
+
+Q: Mount Rushmore has four giant faces carved in rock. Which country is it in?
+A: United States
+X: Canada | Mexico | Australia
+F: Each face is about 18 metres tall, as high as a six-floor building.
+
+Q: In which city is the Prophet's Mosque?
+A: Medina
+X: Mecca | Cairo | Istanbul
+F: Medina is the second holiest city in Islam, after Mecca.
+
+Q: Which country has islands of white houses with blue roofs?
+A: Greece
+X: Norway | Egypt | Japan
+F: Greece has about 6,000 islands. People live on only about 200 of them.
+
+Q: Which country is famous for safaris on the Maasai Mara?
+A: Kenya
+X: Egypt | Morocco | Nigeria
+F: Every year more than a million wildebeest walk across the Maasai Mara.
+
+Q: In which city is the Sheikh Zayed Grand Mosque, with 82 white domes?
+A: Abu Dhabi
+X: Dubai | Doha | Riyadh
+F: The mosque has one of the biggest carpets in the world.
+
+Q: In which city are the twin Petronas Towers?
+A: Kuala Lumpur
+X: Singapore | Bangkok | Jakarta
+F: A bridge joins the two towers 170 metres above the street.
+
+Q: Which country does Lego come from?
+A: Denmark
+X: Sweden | Germany | Netherlands
+F: The name Lego comes from Danish words meaning "play well".
+
+Q: Which country does the furniture shop IKEA come from?
+A: Sweden
+X: Denmark | Germany | Finland
+F: IKEA's colours, blue and yellow, are the colours of the Swedish flag.
+
+Q: What language do most people speak in Argentina?
+A: Spanish
+X: Portuguese | Italian | English
+F: Spanish came to South America with sailors from Spain 500 years ago.
+
+Q: What language do most people speak in Austria?
+A: German
+X: Austrian | French | Italian
+F: German is also spoken in Germany and much of Switzerland.
+
+Q: Hieroglyphs are a kind of picture writing from which ancient land?
+A: Ancient Egypt
+X: Ancient Rome | Ancient Greece | Ancient China
+F: Nobody could read hieroglyphs until the Rosetta Stone was found.
+
+Q: Gladiators fought in the arenas of which ancient city?
+A: Rome
+X: Athens | Cairo | Babylon
+F: The Romans also built roads, bridges and baths all over Europe.
+
+Q: The Vikings were sailors and warriors from which part of the world?
+A: Scandinavia
+X: Arabia | India | Spain
+F: Vikings sailed all the way to North America about a thousand years ago.
+
+Q: The Silk Road was an old trade route between Europe and which country?
+A: China
+X: Brazil | Australia | Canada
+F: Silk, spices and paper travelled west along the Silk Road on camels.
+
+Q: Couscous and tagine are dishes from which country?
+A: Morocco
+X: Japan | Mexico | Norway
+F: A tagine is cooked in a clay pot with a lid shaped like a pointed hat.
+
+Q: Kebabs, baklava and a sweet called "delight" come from which country?
+A: Turkey
+X: Sweden | Peru | Japan
+F: Baklava is made of thin pastry, nuts and honey.
+
+Q: Hummus and falafel come from which part of the world?
+A: The Middle East
+X: South America | Scandinavia | East Asia
+F: Both are made from chickpeas.
+
+Q: In which country is the Terracotta Army of thousands of clay soldiers?
+A: China
+X: Japan | India | Greece
+F: Every soldier has a different face. They guarded an emperor's tomb.
+
+[hard]
+Q: The Serengeti, famous for its wild animals, is in which country?
+A: Tanzania
+X: South Africa | Nigeria | Egypt
+F: Serengeti means "endless plains" in the Maasai language.
+
+Q: What is the main language of Iran?
+A: Persian
+X: Arabic | Turkish | Hindi
+F: Persian is also called Farsi. It is written in the Arabic alphabet.
+
+Q: What is the national language of Pakistan?
+A: Urdu
+X: Arabic | Persian | Bengali
+F: Urdu is written from right to left.
+
+Q: What is the alphabet used in Russia called?
+A: Cyrillic
+X: Latin | Arabic | Greek
+F: In Cyrillic the letter that looks like P is said like R.
+
+Q: Pho, a noodle soup, comes from which country?
+A: Vietnam
+X: Thailand | Japan | South Korea
+F: Pho is often eaten for breakfast.
+
+Q: Kimchi, spicy pickled cabbage, comes from which country?
+A: Korea
+X: Japan | China | Thailand
+F: Koreans eat kimchi with almost every meal.
+
+Q: Borobudur, the biggest Buddhist temple in the world, is in which country?
+A: Indonesia
+X: India | Thailand | Cambodia
+F: Borobudur was hidden under ash and jungle for hundreds of years.
+
+Q: In which country are the churches of Lalibela, carved down into solid rock?
+A: Ethiopia
+X: Egypt | Kenya | Morocco
+F: The eleven churches were cut out of the rock about 800 years ago.
+
+Q: The Palace of Versailles, with its Hall of Mirrors, is near which city?
+A: Paris
+X: Vienna | Madrid | London
+F: The palace has 2,300 rooms.
+
+Q: In which city is Schonbrunn Palace?
+A: Vienna
+X: Berlin | Paris | Prague
+F: The oldest zoo in the world is in the palace gardens.
+
+Q: In which city are the Charles Bridge and a famous astronomical clock?
+A: Prague
+X: Vienna | Budapest | Warsaw
+F: The clock has been telling the time since 1410.
+
+Q: In which city is the Atomium, a building shaped like a giant atom?
+A: Brussels
+X: Amsterdam | Paris | Berlin
+F: The Atomium is 102 metres tall and you can walk inside its balls.
+
+Q: The Sistine Chapel, with its famous painted ceiling, is in which tiny country?
+A: Vatican City
+X: Monaco | San Marino | Malta
+F: Michelangelo spent four years painting the ceiling.
+
+Q: Uluru, a giant red rock in the desert, is in which country?
+A: Australia
+X: New Zealand | South Africa | Mexico
+F: Uluru is sacred to the Anangu people, who have lived there for thousands of years.
+
+Q: In which Japanese city is the Golden Pavilion?
+A: Kyoto
+X: Tokyo | Osaka | Hiroshima
+F: Kyoto was the capital of Japan for more than a thousand years.
+
+Q: The Potala Palace stands high in the mountains of which land?
+A: Tibet
+X: Nepal | Bhutan | Mongolia
+F: The palace has about a thousand rooms and is 3,700 metres above the sea.
+
+Q: The Tiger's Nest monastery clings to a cliff in which country?
+A: Bhutan
+X: Nepal | India | Japan
+F: Bhutan is called the Land of the Thunder Dragon.
+
+Q: In which country is the golden Shwedagon Pagoda?
+A: Myanmar
+X: Thailand | Laos | Cambodia
+F: The pagoda is covered in real gold and topped with thousands of diamonds.
+
+Q: The Registan, a square of grand tiled buildings in Samarkand, is in which country?
+A: Uzbekistan
+X: Iran | Turkey | India
+F: Samarkand grew rich from the traders of the Silk Road.
+
+Q: The ruins of Persepolis are in which country?
+A: Iran
+X: Iraq | Egypt | Greece
+F: Persepolis was the grand capital of the Persian kings 2,500 years ago.
+
+Q: The ruins of the ancient city of Babylon are in which country?
+A: Iraq
+X: Iran | Egypt | Turkey
+F: Babylon was famous for its Hanging Gardens.
+
+Q: The Nazca Lines, giant drawings in the desert, are in which country?
+A: Peru
+X: Chile | Mexico | Egypt
+F: The drawings are so big that they can only be seen properly from the air.
+
+Q: Which African country has twelve official languages?
+A: South Africa
+X: Kenya | Egypt | Nigeria
+F: Zulu, Xhosa, Afrikaans and English are four of the twelve.
+
+Q: Which country has four languages: German, French, Italian and Romansh?
+A: Switzerland
+X: Belgium | Austria | Luxembourg
+F: Swiss coins say "Helvetia", the old Latin name, so no language is favoured.
+
+Q: The Day of the Dead, when families remember those who have died, is from which country?
+A: Mexico
+X: Spain | Brazil | Peru
+F: Families decorate with marigolds and sugar skulls.
+
+Q: Holi, when people throw coloured powder at each other, comes from which country?
+A: India
+X: China | Japan | Thailand
+F: Holi welcomes the spring.
+
+Q: In which country do people throw tomatoes at each other at a festival?
+A: Spain
+X: Italy | Mexico | Portugal
+F: At La Tomatina more than a hundred tonnes of tomatoes are thrown in an hour.
+
+Q: What is the mosque in Mecca that surrounds the Kaaba called?
+A: Masjid al-Haram
+X: Al-Aqsa Mosque | The Blue Mosque | The Prophet's Mosque
+F: It is the biggest mosque in the world.
+
+Q: Which city had the House of Wisdom, a great library of a thousand years ago?
+A: Baghdad
+X: Cairo | Damascus | Mecca
+F: Scholars there turned the books of many lands into Arabic.
+
+Q: Ibn Battuta, one of the greatest travellers ever, came from which country?
+A: Morocco
+X: Egypt | Italy | India
+F: He set off in 1325 and travelled about 120,000 kilometres in thirty years.
+
+Q: Marco Polo travelled from Venice all the way to which country?
+A: China
+X: Egypt | Japan | Brazil
+F: His journey there and back took 24 years.
+
+Q: Whose ships were the first to sail all the way around the world?
+A: Ferdinand Magellan
+X: Christopher Columbus | James Cook | Marco Polo
+F: Magellan died on the way. One of his five ships made it home in 1522.
+
+Q: Who was the first person to reach the South Pole?
+A: Roald Amundsen
+X: Robert Scott | Ernest Shackleton | Edmund Hillary
+F: Amundsen, from Norway, got there with sled dogs in 1911.
+
+Q: Who were the first people to climb Mount Everest?
+A: Hillary and Tenzing
+X: Amundsen and Scott | Lewis and Clark | Armstrong and Aldrin
+F: Edmund Hillary and Tenzing Norgay reached the top in 1953.
