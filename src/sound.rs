@@ -28,6 +28,9 @@ pub enum Sound {
     Win,
     /// One star of the stars a round earns.
     Star,
+    /// The tune of a celebration, from the smallest (1) to the grandest (6); see
+    /// `crate::app::Feat::tier`.
+    Fanfare(u8),
 }
 
 #[derive(Clone, Copy)]
@@ -52,15 +55,135 @@ const E4: f32 = 329.6;
 const C5: f32 = 523.3;
 const D5: f32 = 587.3;
 const E5: f32 = 659.3;
+const F5: f32 = 698.5;
 const G5: f32 = 784.0;
 const A5: f32 = 880.0;
+const B5: f32 = 987.8;
 const C6: f32 = 1046.5;
+const D6: f32 = 1174.7;
 const E6: f32 = 1318.5;
 const G6: f32 = 1568.0;
+const C7: f32 = 2093.0;
+
+/// A tune being written: its notes so far, and the moment the next one starts.
+struct Tune {
+    notes: Vec<Note>,
+    at: f32,
+}
+
+impl Tune {
+    /// Notes one after another, `every` seconds apart, each with a tap of the drum.
+    fn run(&mut self, pitches: &[f32], every: f32) {
+        for &pitch in pitches {
+            self.notes.push((Wave::Triangle, pitch, self.at, every * 1.6, 0.28));
+            self.notes.push((Wave::Knock, 200.0, self.at, 0.08, 0.25));
+            self.at += every;
+        }
+    }
+
+    /// Notes together, on a beat of the big drum. The next thing comes `then`
+    /// seconds later.
+    fn chord(&mut self, pitches: &[f32], lasts: f32, then: f32) {
+        for &pitch in pitches {
+            self.notes.push((Wave::Triangle, pitch, self.at, lasts, 0.15));
+        }
+        self.notes.push((Wave::Knock, 130.0, self.at, 0.15, 0.25));
+        self.at += then;
+    }
+
+    /// A roll of the drum that grows louder.
+    fn roll(&mut self, taps: usize) {
+        for i in 0..taps {
+            self.notes.push((Wave::Noise, 0.0, self.at, 0.05, 0.08 + 0.012 * i as f32));
+            self.notes.push((Wave::Knock, 160.0, self.at, 0.05, 0.15));
+            self.at += 0.05;
+        }
+    }
+
+    /// Bells ringing up over the chord that was just struck.
+    fn bells(&mut self, pitches: &[f32]) {
+        for (i, &pitch) in pitches.iter().enumerate() {
+            self.notes.push((Wave::Sine, pitch, self.at + 0.12 + i as f32 * 0.12, 0.5, 0.16));
+        }
+    }
+}
+
+/// The tune of a celebration. Each is longer than the one before it and has more in
+/// it: a drum roll from the fourth on, a second verse in the fifth, and the sixth
+/// opens with the notes the game itself opens with.
+fn fanfare(tier: u8) -> Vec<Note> {
+    const C: [f32; 4] = [C5, E5, G5, C6];
+    const F: [f32; 3] = [F5, A5, C6];
+    const G: [f32; 3] = [G5, B5, D6];
+    let mut tune = Tune { notes: Vec::new(), at: 0.0 };
+    match tier {
+        // Ta-ta-ta-daa.
+        0 | 1 => {
+            tune.run(&[G5, G5, G5], 0.13);
+            tune.chord(&C, 0.9, 0.0);
+        }
+        2 => {
+            tune.run(&[C5, E5, G5], 0.12);
+            tune.chord(&C[..3], 0.3, 0.24);
+            tune.run(&[G5], 0.12);
+            tune.chord(&C, 1.0, 0.0);
+        }
+        3 | 4 => {
+            if tier == 4 {
+                tune.roll(6);
+            }
+            let (up, rung): (&[f32], &[f32]) = if tier == 4 { (&[C5, E5, G5, C6, E6], &[E6, G6, C7]) } else { (&C, &[E6, G6]) };
+            tune.run(up, 0.12);
+            tune.chord(&F, 0.4, 0.3);
+            tune.chord(&G, 0.4, 0.3);
+            tune.chord(&C, if tier == 4 { 1.4 } else { 1.1 }, 0.0);
+            tune.bells(rung);
+        }
+        _ => {
+            if tier >= 6 {
+                tune.run(&[C5, D5, E5, G5, A5, C6], 0.14);
+            }
+            tune.roll(8);
+            tune.run(&C, 0.12);
+            tune.chord(&F, 0.4, 0.3);
+            tune.chord(&G, 0.4, 0.3);
+            tune.run(&[G5, B5, D6, G6], 0.12);
+            tune.chord(&C, 0.4, 0.3);
+            tune.chord(&F, 0.4, 0.3);
+            tune.chord(&G, 0.4, 0.3);
+            if tier >= 6 {
+                tune.roll(10);
+                tune.chord(&C, 0.35, 0.3);
+                tune.chord(&C, 0.35, 0.3);
+                tune.chord(&C, 2.0, 0.0);
+                tune.bells(&[E6, G6, C7, E6, G6, C7, C7]);
+            } else {
+                tune.chord(&C, 1.6, 0.0);
+                tune.bells(&[E6, G6, C7, G6, C7]);
+            }
+        }
+    }
+    tune.notes
+}
 
 impl Sound {
     #[cfg(test)]
-    pub const ALL: [Sound; 8] = [Sound::Intro, Sound::Start, Sound::Click, Sound::Right, Sound::Wrong, Sound::Step, Sound::Win, Sound::Star];
+    pub const ALL: [Sound; 14] = [
+        Sound::Intro,
+        Sound::Start,
+        Sound::Click,
+        Sound::Right,
+        Sound::Wrong,
+        Sound::Step,
+        Sound::Win,
+        Sound::Star,
+        Sound::Fanfare(1),
+        Sound::Fanfare(2),
+        Sound::Fanfare(3),
+        Sound::Fanfare(4),
+        Sound::Fanfare(5),
+        Sound::Fanfare(6),
+    ];
 
     fn name(self) -> &'static str {
         match self {
@@ -72,12 +195,14 @@ impl Sound {
             Sound::Step => "step",
             Sound::Win => "win",
             Sound::Star => "star",
+            Sound::Fanfare(tier) => ["fanfare1", "fanfare2", "fanfare3", "fanfare4", "fanfare5", "fanfare6"][tier.clamp(1, 6) as usize - 1],
         }
     }
 
-    fn notes(self) -> &'static [Note] {
+    fn notes(self) -> Vec<Note> {
         use Wave::{Knock, Noise, Sine, Triangle};
-        match self {
+        let notes: &[Note] = match self {
+            Sound::Fanfare(tier) => return fanfare(tier),
             // Six letters drop in, `crate::app::INTRO_LETTER` seconds apart, each with
             // a knock as it lands, and then a chord.
             Sound::Intro => &[
@@ -116,7 +241,8 @@ impl Sound {
                 (Sine, G6, 0.36, 0.6, 0.12),
             ],
             Sound::Star => &[(Sine, C6, 0.0, 0.25, 0.3), (Sine, G6, 0.03, 0.22, 0.15)],
-        }
+        };
+        notes.to_vec()
     }
 
     /// The sound itself.
@@ -125,7 +251,7 @@ impl Sound {
         let length = notes.iter().map(|&(_, _, start, lasts, _)| start + lasts).fold(0.0, f32::max);
         let mut mix = vec![0.0f32; (length * RATE as f32) as usize];
         let mut seed = 0x2545_F491u32;
-        for &(wave, pitch, start, lasts, loud) in notes {
+        for &(wave, pitch, start, lasts, loud) in &notes {
             let first = (start * RATE as f32) as usize;
             for i in 0..(lasts * RATE as f32) as usize {
                 let t = i as f32 / RATE as f32;
@@ -258,7 +384,9 @@ mod tests {
         for sound in Sound::ALL {
             let samples = sound.samples();
             let seconds = samples.len() as f32 / RATE as f32;
-            assert!((0.05..3.0).contains(&seconds), "{sound:?} lasts {seconds}");
+            // Only a celebration may go on for longer than three seconds.
+            let longest = if matches!(sound, Sound::Fanfare(_)) { 8.0 } else { 3.0 };
+            assert!((0.05..longest).contains(&seconds), "{sound:?} lasts {seconds}");
             let loudest = samples.iter().map(|s| s.unsigned_abs()).max().unwrap();
             assert!((3000..30000).contains(&loudest), "{sound:?} peaks at {loudest}");
             // It starts and ends in silence, so nothing clicks.
@@ -271,6 +399,14 @@ mod tests {
         }
         let names: std::collections::HashSet<_> = Sound::ALL.into_iter().map(Sound::name).collect();
         assert_eq!(names.len(), Sound::ALL.len());
+    }
+
+    #[test]
+    fn a_grander_celebration_has_a_longer_tune() {
+        let lengths: Vec<usize> = (1..=6).map(|tier| Sound::Fanfare(tier).samples().len()).collect();
+        assert!(lengths.windows(2).all(|pair| pair[0] < pair[1]), "{lengths:?}");
+        // The smallest is over quickly, and the grandest is a tune of its own.
+        assert!(lengths[0] < 2 * RATE as usize && lengths[5] > 5 * RATE as usize, "{lengths:?}");
     }
 
     /// A stand-in for the system's player, which notes what it was asked to play.

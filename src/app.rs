@@ -24,6 +24,9 @@ pub const INTRO_LETTER: f32 = 0.25;
 pub const INTRO: f32 = 5.5;
 /// Seconds from the end of a round to its first star, and from one star to the next.
 const STAR_EVERY: f32 = 0.45;
+/// Seconds a celebration is shown before a key or a click can close it, so that
+/// whoever was still pressing Enter does not miss it.
+const SEEN: f32 = 0.8;
 /// Questions dealt to a round: the planks, and some to spare for wrong answers.
 const HAND: usize = PLANKS + 4;
 
@@ -44,7 +47,7 @@ pub enum Action {
     Motion,
     Help,
     Quit,
-    /// Past the intro, or past the walk across the bridge.
+    /// Past the intro, the walk across the bridge, or a celebration.
     Skip,
 }
 
@@ -93,6 +96,46 @@ pub struct Particle {
     pub symbol: &'static str,
     /// Drawn over the screen, as sparkles are, or behind it, as confetti is.
     pub front: bool,
+}
+
+/// Something worth a celebration, from the smallest to the grandest.
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+pub enum Feat {
+    /// Every level of one category (an index into `App::cats`) has been crossed.
+    Category(usize),
+    /// One level has been crossed in every category.
+    Level(Level),
+    /// Every level of every category.
+    World,
+    /// And three stars for every one of them.
+    Champion,
+}
+
+impl Feat {
+    /// How grand it is, from 1 to 6. Everything about a celebration grows with this:
+    /// its tune (`Sound::Fanfare`), its confetti and fireworks, and its picture.
+    pub fn tier(self) -> usize {
+        match self {
+            Feat::Category(_) => 1,
+            Feat::Level(Level::Easy) => 2,
+            Feat::Level(Level::Medium) => 3,
+            Feat::Level(Level::Hard) => 4,
+            Feat::World => 5,
+            Feat::Champion => 6,
+        }
+    }
+}
+
+/// A celebration being shown over the end of a round.
+pub struct Celebration {
+    pub feat: Feat,
+    /// Seconds it has been showing.
+    pub age: f32,
+    /// Fireworks still to go up, and seconds until the next.
+    fireworks: u32,
+    firework_in: f32,
+    /// Seconds until more confetti, for the celebrations that have it.
+    confetti_in: f32,
 }
 
 /// The most stars earned in each category and level since the game was started. They
@@ -145,6 +188,11 @@ pub struct App {
     pub particles: Vec<Particle>,
     /// Stars of a finished round that have appeared so far.
     pub stars_shown: u8,
+    /// The celebration on the screen, if the round that just ended earned one.
+    pub celebration: Option<Celebration>,
+    /// A celebration that waits for the round's stars to appear, and for how many
+    /// seconds more.
+    earned: Option<(Feat, f32)>,
     /// What was said about the last answer.
     pub praise: &'static str,
     /// What can be clicked, as of the last time the screen was drawn; later ones are
@@ -196,6 +244,8 @@ impl App {
             drop: None,
             particles: Vec::new(),
             stars_shown: 0,
+            celebration: None,
+            earned: None,
             praise: "",
             buttons: Vec::new(),
             columns: 2,
@@ -267,6 +317,43 @@ impl App {
         }
     }
 
+    /// Every feat there is a celebration for that the stars so far amount to. "Mix"
+    /// is a category like the others.
+    fn feats(&self) -> Vec<Feat> {
+        let crossed = |cat: &Category, level: Level| !cat.has(level) || self.progress.stars(&cat.id, level) > 0;
+        let mut feats = Vec::new();
+        for (i, cat) in self.cats.iter().enumerate() {
+            if Level::ALL.into_iter().any(|l| cat.has(l)) && Level::ALL.into_iter().all(|l| crossed(cat, l)) {
+                feats.push(Feat::Category(i));
+            }
+        }
+        let categories = feats.len();
+        for level in Level::ALL {
+            if self.cats.iter().any(|c| c.has(level)) && self.cats.iter().all(|c| crossed(c, level)) {
+                feats.push(Feat::Level(level));
+            }
+        }
+        let (stars, possible) = self.stars();
+        if possible > 0 && categories == self.cats.len() {
+            feats.push(Feat::World);
+        }
+        if possible > 0 && stars == possible {
+            feats.push(Feat::Champion);
+        }
+        feats
+    }
+
+    /// Begins a celebration now: its window, its tune, and the first of its confetti.
+    pub fn celebrate(&mut self, feat: Feat) {
+        let tier = feat.tier();
+        let fireworks = [1, 2, 3, 5, 12, u32::MAX][tier - 1];
+        self.earned = None;
+        self.celebration = Some(Celebration { feat, age: 0.0, fireworks, firework_in: 0.3, confetti_in: 1.6 });
+        self.play(Sound::Fanfare(tier as u8));
+        // The two grandest rain theirs in front, over the window as well.
+        self.confetti(60 + 40 * tier, tier >= 5);
+    }
+
     /// Up to `HAND` questions for a round: what the deck still holds, and when that
     /// runs out, everything shuffled afresh.
     fn deal(&mut self, cat: usize, level: Level) -> Vec<Question> {
@@ -305,6 +392,8 @@ impl App {
         self.walker = 0.0;
         self.drop = None;
         self.particles.clear();
+        self.celebration = None;
+        self.earned = None;
         self.focus = 0;
         self.play(Sound::Start);
     }
@@ -354,7 +443,10 @@ impl App {
     fn finish(&mut self) {
         let Some((cat, level, round)) = &self.playing else { return };
         let stars = round.stars();
+        let before = self.feats();
         let best = self.progress.earn(&self.cats[*cat].id, *level, stars);
+        // Of the feats these stars completed, only the grandest is celebrated.
+        let feat = self.feats().into_iter().filter(|f| !before.contains(f)).max_by_key(|f| f.tier());
         self.phase = Phase::Done { stars, best };
         self.phase_time = 0.0;
         self.walker = PLANKS as f32 + 1.5;
@@ -362,7 +454,13 @@ impl App {
         self.stars_shown = if self.animations { 0 } else { stars };
         self.focus = 0;
         self.play(Sound::Win);
-        self.confetti(90);
+        self.confetti(90, false);
+        match feat {
+            // Once the stars have had their turn.
+            Some(feat) if self.animations => self.earned = Some((feat, stars as f32 * STAR_EVERY + 0.7)),
+            Some(feat) => self.celebrate(feat),
+            None => {}
+        }
     }
 
     fn home(&mut self) {
@@ -371,9 +469,23 @@ impl App {
         self.phase = Phase::Asking;
         self.drop = None;
         self.particles.clear();
+        self.celebration = None;
+        self.earned = None;
     }
 
     pub fn act(&mut self, action: Action) {
+        // A celebration is closed before anything else is done, and one that was
+        // still waiting for the stars comes at once when the player would go.
+        if let Some(celebration) = &self.celebration {
+            if !self.animations || celebration.age >= SEEN {
+                self.celebration = None;
+                self.play(Sound::Click);
+            }
+            return;
+        }
+        if let (Action::Back | Action::Again, Some((feat, _))) = (action, self.earned) {
+            return self.celebrate(feat);
+        }
         match action {
             Action::Start(cat, level) => self.start(cat, level),
             Action::Answer(option) => self.answer(option),
@@ -404,6 +516,9 @@ impl App {
                 if !self.animations {
                     self.drop = None;
                     self.particles.clear();
+                    if let Some((feat, _)) = self.earned {
+                        self.celebrate(feat);
+                    }
                     match (self.screen, self.phase) {
                         (Screen::Intro, _) => self.home(),
                         (Screen::Play, Phase::Crossing) => self.finish(),
@@ -446,7 +561,7 @@ impl App {
             self.help = false;
             return;
         }
-        if self.screen == Screen::Intro {
+        if self.screen == Screen::Intro || self.celebration.is_some() {
             return self.act(Action::Skip);
         }
         // The same everywhere. None of these letters is an answer's.
@@ -574,6 +689,8 @@ impl App {
             && (self.screen == Screen::Intro
                 || self.drop.is_some()
                 || !self.particles.is_empty()
+                || self.celebration.is_some()
+                || self.earned.is_some()
                 || self.phase == Phase::Crossing
                 || self.walker != self.walker_goal())
     }
@@ -598,7 +715,7 @@ impl App {
         if self.screen == Screen::Intro {
             if !self.intro_burst && self.phase_time >= INTRO_LETTER * 7.8 {
                 self.intro_burst = true;
-                self.confetti(70);
+                self.confetti(70, false);
             }
             if self.phase_time >= INTRO {
                 self.home();
@@ -635,6 +752,37 @@ impl App {
             }
         }
 
+        if let Some((feat, wait)) = self.earned {
+            if wait <= dt {
+                self.celebrate(feat);
+            } else {
+                self.earned = Some((feat, wait - dt));
+            }
+        }
+        if let Some(c) = &mut self.celebration {
+            c.age += dt;
+            c.firework_in -= dt;
+            c.confetti_in -= dt;
+            let tier = c.feat.tier();
+            let firework = c.fireworks > 0 && c.firework_in <= 0.0;
+            if firework {
+                c.fireworks -= 1;
+                c.firework_in = if tier >= 5 { 0.45 } else { 0.6 };
+            }
+            // More confetti for a while when the whole passport is stamped, and for
+            // as long as anyone watches when it is full of stars.
+            let rain = c.confetti_in <= 0.0 && (tier == 6 || tier == 5 && c.age < 7.0);
+            if rain {
+                c.confetti_in = 1.6;
+            }
+            if firework {
+                self.firework();
+            }
+            if rain {
+                self.confetti(60, true);
+            }
+        }
+
         let floor = self.size.1 as f32;
         for p in &mut self.particles {
             p.age += dt;
@@ -646,8 +794,9 @@ impl App {
         true
     }
 
-    /// Confetti from the top of the window.
-    fn confetti(&mut self, pieces: usize) {
+    /// Confetti from the top of the window, behind what is on the screen or, with
+    /// `front`, over the parts of it that are empty.
+    fn confetti(&mut self, pieces: usize, front: bool) {
         if !self.animations {
             return;
         }
@@ -665,7 +814,7 @@ impl App {
                 life: 6.0,
                 color: colors[self.rng.below(colors.len())],
                 symbol,
-                front: false,
+                front,
             };
             self.particles.push(particle);
         }
@@ -674,20 +823,35 @@ impl App {
     /// Sparkles flying out of a button.
     fn sparkle(&mut self, from: Rect) {
         let theme = self.theme();
-        let (cx, cy) = (from.x as f32 + from.width as f32 / 2.0, from.y as f32 + from.height as f32 / 2.0);
-        for i in 0..16 {
-            let turn = i as f32 / 16.0 * std::f32::consts::TAU;
-            let speed = 6.0 + self.rng.unit() * 10.0;
+        let at = (from.x as f32 + from.width as f32 / 2.0, from.y as f32 + from.height as f32 / 2.0);
+        self.burst(at, 16, [theme.sun, theme.accent], 1.0);
+    }
+
+    /// A firework somewhere in the upper part of the window, in one of the theme's
+    /// colors and the sun's.
+    fn firework(&mut self) {
+        let theme = self.theme();
+        let colors = [theme.answers[self.rng.below(4)], theme.sun];
+        let at = ((0.1 + self.rng.unit() * 0.8) * self.size.0 as f32, (0.1 + self.rng.unit() * 0.5) * self.size.1 as f32);
+        self.burst(at, 28, colors, 2.0);
+    }
+
+    /// Stars flying out from a point and falling. `slow` times slower than a
+    /// sparkle, they hang in the air that many times longer.
+    fn burst(&mut self, at: (f32, f32), pieces: usize, colors: [Rgb; 2], slow: f32) {
+        for i in 0..pieces {
+            let turn = i as f32 / pieces as f32 * std::f32::consts::TAU;
+            let speed = (6.0 + self.rng.unit() * 10.0) / slow;
             // A cell is twice as tall as it is wide, so half the speed downwards.
             let particle = Particle {
-                x: cx,
-                y: cy,
+                x: at.0,
+                y: at.1,
                 vx: turn.cos() * speed * 2.0,
                 vy: turn.sin() * speed,
-                gravity: 14.0,
+                gravity: 14.0 / slow,
                 age: 0.0,
-                life: 0.5 + self.rng.unit() * 0.4,
-                color: if i % 2 == 0 { theme.sun } else { theme.accent },
+                life: (0.5 + self.rng.unit() * 0.4) * slow,
+                color: colors[i % 2],
                 symbol: if i % 2 == 0 { "★" } else { "✦" },
                 front: true,
             };
@@ -841,6 +1005,134 @@ mod tests {
         // Only as many are seen again as the category is short of two full hands.
         assert_eq!(shared, (2 * HAND).saturating_sub(total));
         assert!((1..HAND).all(|i| !second[..i].contains(&second[i])));
+    }
+
+    /// Plays a level of a category to its end with this many wrong answers, and says
+    /// what celebration that brought.
+    fn cross(app: &mut App, cat: usize, level: Level, mistakes: usize) -> Option<Feat> {
+        app.start(cat, level);
+        for _ in 0..mistakes {
+            let wrong = (round(app).asked.correct + 1) % 4;
+            app.act(Action::Answer(wrong));
+            app.act(Action::Next);
+        }
+        while !round(app).built() {
+            let right = round(app).asked.correct;
+            app.act(Action::Answer(right));
+            app.act(Action::Next);
+        }
+        if app.phase == Phase::Crossing {
+            app.act(Action::Skip);
+        }
+        assert!(matches!(app.phase, Phase::Done { .. }));
+        app.celebration.as_ref().map(|c| c.feat)
+    }
+
+    #[test]
+    fn every_feat_is_celebrated_once_and_only_the_grandest_of_several() {
+        let mut app = app();
+        app.animations = false;
+        let cats = app.cats.len();
+        let last = cats - 1;
+        let fanfares = |app: &App| app.speaker.heard.iter().filter_map(|s| if let Sound::Fanfare(tier) = s { Some(*tier) } else { None }).collect::<Vec<u8>>();
+
+        // Level by level: nothing until the last category of each.
+        for cat in 0..cats {
+            // Two mistakes in the very first round, for two stars.
+            let feat = cross(&mut app, cat, Level::Easy, if cat == 0 { 2 } else { 0 });
+            assert_eq!(feat, (cat == last).then_some(Feat::Level(Level::Easy)), "{cat}");
+        }
+        // While it is up, a key closes it and does nothing else.
+        assert!(app.celebration.is_some());
+        press(&mut app, KeyCode::Char('q'));
+        assert!(app.celebration.is_none() && app.screen == Screen::Play && !app.quit);
+        // Doing it again is no feat.
+        assert_eq!(cross(&mut app, last, Level::Easy, 0), None);
+        for cat in 0..cats {
+            assert_eq!(cross(&mut app, cat, Level::Medium, 0), (cat == last).then_some(Feat::Level(Level::Medium)), "{cat}");
+        }
+        // The last level of a category completes the category. The last of them all
+        // completes its category, the level and the passport: one celebration.
+        for cat in 0..cats {
+            assert_eq!(cross(&mut app, cat, Level::Hard, 0), Some(if cat == last { Feat::World } else { Feat::Category(cat) }), "{cat}");
+        }
+        assert_eq!(app.rank(), "Globetrotter");
+        assert_eq!(cross(&mut app, 1, Level::Hard, 0), None);
+        // Three stars where there were two, and there is nothing left to win.
+        assert_eq!(cross(&mut app, 0, Level::Easy, 0), Some(Feat::Champion));
+        assert_eq!(app.rank(), "World Champion");
+        assert_eq!(cross(&mut app, 0, Level::Easy, 0), None);
+
+        let mut expected = vec![2, 3];
+        expected.extend(std::iter::repeat_n(1, last));
+        expected.extend([5, 6]);
+        assert_eq!(fanfares(&app), expected);
+        // Without animations there is nothing in the air.
+        assert!(app.particles.is_empty() && !app.animating());
+    }
+
+    #[test]
+    fn a_celebration_waits_for_the_stars_and_cannot_be_missed() {
+        let mut app = app();
+        app.animations = false;
+        cross(&mut app, 0, Level::Easy, 0);
+        cross(&mut app, 0, Level::Medium, 0);
+        cross(&mut app, 1, Level::Easy, 0);
+        cross(&mut app, 1, Level::Medium, 0);
+        app.animations = true;
+
+        // The stars first, each with its sound, and then the celebration by itself.
+        assert_eq!(cross(&mut app, 0, Level::Hard, 0), None);
+        assert!(app.animating());
+        for _ in 0..4 {
+            app.advance(STAR_EVERY);
+        }
+        assert!(app.stars_shown == 3 && app.celebration.is_none());
+        app.advance(0.3);
+        assert_eq!(app.celebration.as_ref().map(|c| c.feat), Some(Feat::Category(0)));
+        assert_eq!(app.speaker.heard.last(), Some(&Sound::Fanfare(1)));
+        assert!(app.particles.iter().any(|p| !p.front), "confetti");
+        assert!(app.particles.iter().any(|p| p.front), "a firework");
+        // A key pressed too soon does not close it; later any key or click does, and
+        // that is all the key does.
+        press(&mut app, KeyCode::Enter);
+        assert!(app.celebration.is_some());
+        app.advance(SEEN);
+        app.buttons = vec![(Rect::new(0, 0, 80, 24), Action::Back), (Rect::new(0, 0, 80, 24), Action::Skip)];
+        app.on_mouse(MouseEvent { kind: MouseEventKind::Down(MouseButton::Left), column: 5, row: 5, modifiers: KeyModifiers::NONE });
+        assert!(app.celebration.is_none() && matches!(app.phase, Phase::Done { .. }) && app.screen == Screen::Play);
+        // A small celebration has one firework, and then it is quiet again.
+        for _ in 0..200 {
+            app.advance(0.05);
+        }
+        assert!(!app.animating());
+
+        // Leaving before the stars are out brings the celebration at once.
+        assert_eq!(cross(&mut app, 1, Level::Hard, 0), None);
+        press(&mut app, KeyCode::Enter);
+        assert_eq!(app.celebration.as_ref().map(|c| c.feat), Some(Feat::Category(1)));
+        assert_eq!(app.screen, Screen::Play);
+        app.advance(SEEN);
+        press(&mut app, KeyCode::Enter);
+        assert!(app.celebration.is_none() && app.screen == Screen::Play);
+        press(&mut app, KeyCode::Enter);
+        assert_eq!(app.screen, Screen::Home);
+
+        // The grandest goes on for as long as it is watched.
+        app.start(0, Level::Easy);
+        app.celebrate(Feat::Champion);
+        for _ in 0..600 {
+            app.advance(0.05);
+        }
+        assert!(app.particles.len() > 50 && app.particles.iter().all(|p| p.front));
+        // Switching the moving off stops it, and the window stays.
+        app.celebration = None;
+        assert_eq!(cross(&mut app, 2, Level::Easy, 0), None);
+        cross(&mut app, 2, Level::Medium, 0);
+        assert_eq!(cross(&mut app, 2, Level::Hard, 0), None);
+        app.act(Action::Motion);
+        assert_eq!(app.celebration.as_ref().map(|c| c.feat), Some(Feat::Category(2)));
+        assert!(app.particles.is_empty() && app.stars_shown == 3);
     }
 
     #[test]
