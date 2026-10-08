@@ -141,10 +141,11 @@ fn main() -> ExitCode {
             _ => return fail(&format!("unknown argument '{arg}'")),
         }
     }
+    // What the options chose is remembered even when the game then cannot start.
+    settings.save(&settings_path);
     if !io::stdin().is_terminal() || !stdout().is_terminal() {
         return fail("this is an interactive game and needs a terminal");
     }
-    settings.save(&settings_path);
     update::before_start(settings.update);
 
     let (categories, problems) = quiz::load(&quiz::own_dir());

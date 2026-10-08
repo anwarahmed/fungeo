@@ -1,0 +1,20 @@
+pkgbase = fungeo-bin
+	pkgdesc = A geography quiz for children, in the terminal: build a bridge, one right answer at a time
+	pkgver = @VERSION@
+	pkgrel = 1
+	url = https://github.com/anwarahmed/fungeo
+	arch = x86_64
+	arch = aarch64
+	license = MIT
+	provides = fungeo
+	conflicts = fungeo
+	options = !strip
+	options = !debug
+	source = fungeo-@VERSION@-LICENSE::https://raw.githubusercontent.com/anwarahmed/fungeo/v@VERSION@/LICENSE
+	sha256sums = @SHA_LICENSE@
+	source_x86_64 = fungeo-@VERSION@-x86_64::https://github.com/anwarahmed/fungeo/releases/download/v@VERSION@/fungeo-x86_64-unknown-linux-musl
+	sha256sums_x86_64 = @SHA_X86_64@
+	source_aarch64 = fungeo-@VERSION@-aarch64::https://github.com/anwarahmed/fungeo/releases/download/v@VERSION@/fungeo-aarch64-unknown-linux-musl
+	sha256sums_aarch64 = @SHA_AARCH64@
+
+pkgname = fungeo-bin

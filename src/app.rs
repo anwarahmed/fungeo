@@ -167,6 +167,8 @@ pub struct App {
     decks: HashMap<(usize, Level), Vec<Question>>,
     last_tick: Option<Instant>,
     step_in: f32,
+    /// The mouse button went down and has not come up yet.
+    button_down: bool,
     intro_burst: bool,
 }
 
@@ -209,6 +211,7 @@ impl App {
             decks: HashMap::new(),
             last_tick: None,
             step_in: 0.0,
+            button_down: false,
             intro_burst: false,
         }
     }
@@ -512,8 +515,18 @@ impl App {
     pub fn on_mouse(&mut self, mouse: MouseEvent) {
         let at = Position::new(mouse.column, mouse.row);
         let under = self.buttons.iter().rev().find(|(rect, _)| rect.contains(at)).map(|&(_, action)| action);
-        match mouse.kind {
+        // A click counts when the button goes down. Should a terminal only ever report
+        // it coming up, that counts instead. (The sister project funchess does the same.)
+        let click = match mouse.kind {
             MouseEventKind::Down(MouseButton::Left) => {
+                self.button_down = true;
+                true
+            }
+            MouseEventKind::Up(MouseButton::Left) => !std::mem::take(&mut self.button_down),
+            _ => false,
+        };
+        match mouse.kind {
+            _ if click => {
                 if self.help {
                     self.help = false;
                 } else if let Some(action) = under {
@@ -831,6 +844,18 @@ mod tests {
         assert_eq!(app.phase, Phase::Answered { picked: right, right: true });
         assert!(!app.particles.is_empty(), "sparkles from the button");
         click(&mut app, MouseEventKind::Down(MouseButton::Left), 1, 11);
+        assert_eq!(app.phase, Phase::Asking);
+
+        // Letting go of the button is not a second click, but a release that no press
+        // came before is one.
+        let before = round(&app).asked.question.clone();
+        let right_x = round(&app).asked.correct as u16 * 10 + 1;
+        click(&mut app, MouseEventKind::Up(MouseButton::Left), right_x, 6);
+        assert_eq!(app.phase, Phase::Asking);
+        click(&mut app, MouseEventKind::Up(MouseButton::Left), right_x, 6);
+        assert!(matches!(app.phase, Phase::Answered { right: true, .. }) && round(&app).asked.question == before);
+        click(&mut app, MouseEventKind::Down(MouseButton::Left), 1, 11);
+        click(&mut app, MouseEventKind::Up(MouseButton::Left), 1, 11);
         assert_eq!(app.phase, Phase::Asking);
 
         // Help closes on any click, and that click does nothing else.
