@@ -40,7 +40,7 @@ $XDG_STATE_HOME/fungeo (~/.local/state/fungeo). The stars are not: every start i
 fresh passport.
 
 In the game everything can be clicked. With the keyboard:
-  arrows, Enter               move the marker and choose
+  arrows or H J K L, Enter    move the marker and choose
   A B C D  or  1 2 3 4        answer
   T theme   S sound   M motion (animations)   ? help
   Esc back to the passport    Q quit

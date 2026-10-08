@@ -852,7 +852,7 @@ const HELP: [&str; 13] = [
     "Cross with one mistake or none to earn three stars.",
     "",
     "Mouse: click anything.",
-    "Keys: arrows and Enter, or A B C D (or 1 2 3 4) for an answer.",
+    "Keys: arrows or H J K L, Enter. Answer: A B C D, 1 2 3 4",
     "T theme · S sound · M motion · Esc back · Q quit",
     "",
     "In a big window the words are drawn in big letters.",

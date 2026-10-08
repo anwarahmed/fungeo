@@ -270,6 +270,11 @@ else
     expect "round: a flag question asks whose it is" "Whose flag is this?"
     keys Escape
     expect "round: Esc goes back to the passport" "of 48 stars"
+    # The same square with vim's keys: from Flags · Medium, up and down again, left and right again.
+    keys k j h l Enter
+    expect "round: H J K L move the marker as the arrows do" "Flags · Medium · 0 of 8 planks"
+    keys Escape
+    expect "round: Esc goes back to the passport again" "of 48 stars"
     sleep 0.3
     # The player's own category sorts first (order: 0), and has only an Easy level.
     keys Up Up Left Enter
