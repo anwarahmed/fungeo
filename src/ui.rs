@@ -3,7 +3,8 @@
 //!
 //! Pictures are drawn on a `Canvas` of square pixels, two to a cell (`▀` with a color
 //! above and a color below). Words a child has to read are drawn in the big letters of
-//! `font` wherever they fit, and as ordinary bold text where they do not.
+//! `font` wherever they fit, in its small ones where only those do, and as ordinary
+//! bold text in a window too small for either. The menus are always ordinary text.
 
 use ratatui::Frame;
 use ratatui::buffer::Buffer;
@@ -72,36 +73,89 @@ fn wrap(text: &str, width: usize) -> Vec<String> {
     lines
 }
 
-/// The lines `text` makes in big letters `scale` times the font's size, if it fits `r`.
-fn big_lines(text: &str, r: Rect, scale: usize) -> Option<Vec<String>> {
-    let lines = font::wrap(text, r.width as usize / scale)?;
-    (!lines.is_empty() && lines.len() as u16 * line_rows(scale) <= r.height).then_some(lines)
+/// How words are drawn, from smallest to biggest: as ordinary text, in the small
+/// letters of `font`, in its big ones, and in those at twice their size.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
+enum Size {
+    Plain,
+    Small,
+    Big,
+    Huge,
 }
 
-/// Rows of cells one line of big letters takes, with the space under it.
-fn line_rows(scale: usize) -> u16 {
-    font::rows(scale) + u16::from(scale > 1)
+impl Size {
+    /// The font, and how many pixels across each of its pixels is.
+    fn face(self) -> (&'static font::Font, usize) {
+        match self {
+            Size::Huge => (&font::BIG, 2),
+            Size::Big => (&font::BIG, 1),
+            _ => (&font::SMALL, 1),
+        }
+    }
+
+    /// Rows of cells one line takes, with the space under it.
+    fn line_rows(self) -> u16 {
+        match self {
+            Size::Plain => 1,
+            Size::Small => font::SMALL_ROWS,
+            Size::Big => font::ROWS,
+            Size::Huge => font::BIG.rows(2) + 1,
+        }
+    }
+
+    /// How many cells wide `text` is on one line.
+    fn width(self, text: &str) -> u16 {
+        let (font, scale) = self.face();
+        if self == Size::Plain { text.chars().count() as u16 } else { (font.width(text) * scale) as u16 }
+    }
+
+    /// The lines `text` makes in letters of this size, if it can be drawn in them and
+    /// is no wider than `width`.
+    fn wrap(self, text: &str, width: u16) -> Option<Vec<String>> {
+        let (font, scale) = self.face();
+        if self == Size::Plain {
+            return Some(wrap(text, width as usize));
+        }
+        font.wrap(text, width as usize / scale).filter(|lines| !lines.is_empty())
+    }
+
+    /// The same, if they also fit the height of `r`.
+    fn lines(self, text: &str, r: Rect) -> Option<Vec<String>> {
+        self.wrap(text, r.width).filter(|lines| lines.len() as u16 * self.line_rows() <= r.height)
+    }
 }
 
-/// Writes `text` in the middle of `r`: in big letters up to `scale` times the font's
-/// size where that fits (`scale` 0 for never), and otherwise as ordinary bold text.
-fn label(buf: &mut Buffer, r: Rect, text: &str, fg: Rgb, scale: usize) {
+/// Lines of letters: each with the column and the pixel row (two to a cell) of its
+/// top left corner.
+type Placed = Vec<(i32, i32, String)>;
+
+/// `text` as lines of letters in the middle of `r`, in the biggest size up to `size`
+/// that fits: the size, and each line with the column and the pixel row (two to a
+/// cell) of its top left corner. `None` when only ordinary text will do.
+fn letters(text: &str, r: Rect, size: Size) -> Option<(Size, Placed)> {
+    let (size, lines) = [Size::Huge, Size::Big, Size::Small].into_iter().filter(|&s| s <= size).find_map(|s| Some((s, s.lines(text, r)?)))?;
+    let (font, scale) = size.face();
+    let pitch = size.line_rows() as i32 * 2;
+    // In pixels: the last row of a line is half a cell, so an odd number of rows
+    // still looks centered.
+    let tall = (lines.len() as i32 - 1) * pitch + (font.height * scale) as i32;
+    let top = r.y as i32 * 2 + (r.height as i32 * 2 - tall).max(0) / 2;
+    let placed = lines.into_iter().enumerate().map(|(i, line)| (r.x as i32 + (r.width as i32 - size.width(&line) as i32) / 2, top + i as i32 * pitch, line));
+    Some((size, placed.collect()))
+}
+
+/// Writes `text` in the middle of `r`: in letters of `size` where that fits, or else
+/// the next size down that does, ordinary bold text being the last.
+fn label(buf: &mut Buffer, r: Rect, text: &str, fg: Rgb, size: Size) {
     if r.width == 0 || r.height == 0 {
         return;
     }
-    for scale in (1..=scale).rev() {
-        if let Some(lines) = big_lines(text, r, scale) {
-            // In pixels: the last row of a line is half a cell, so an odd number of
-            // rows still looks centered.
-            let tall = lines.len() as i32 * line_rows(scale) as i32 * 2 - if scale == 1 { 1 } else { 2 };
-            let top = r.y as i32 * 2 + (r.height as i32 * 2 - tall).max(0) / 2;
-            for (i, line) in lines.iter().enumerate() {
-                let wide = (font::width(line) * scale) as i32;
-                let x = r.x as i32 + (r.width as i32 - wide) / 2;
-                font::draw(buf, x, top + i as i32 * line_rows(scale) as i32 * 2, line, color(fg), scale);
-            }
-            return;
+    if let Some((size, lines)) = letters(text, r, size) {
+        let (font, scale) = size.face();
+        for (x, y, line) in lines {
+            font.draw(buf, x, y, &line, color(fg), scale);
         }
+        return;
     }
     let lines = wrap(text, r.width as usize);
     let shown = lines.len().min(r.height as usize);
@@ -112,23 +166,20 @@ fn label(buf: &mut Buffer, r: Rect, text: &str, fg: Rgb, scale: usize) {
 }
 
 /// `label` with every letter in the next of the theme's colors, as the game's name
-/// is, and the colors moving along as `time` passes. Only big letters can do that:
-/// ordinary text is all in one color.
-fn bright_label(buf: &mut Buffer, r: Rect, text: &str, theme: &Theme, scale: usize, time: f32) {
+/// is, and the colors moving along as `time` passes. Only letters that are drawn can
+/// do that: ordinary text is all in one color.
+fn bright_label(buf: &mut Buffer, r: Rect, text: &str, theme: &Theme, size: Size, time: f32) {
     let colors = [theme.answers[0], theme.answers[2], theme.answers[3], theme.answers[1], theme.accent];
-    let Some(lines) = (1..=scale).rev().find_map(|scale| Some((scale, big_lines(text, r, scale)?))) else {
-        return label(buf, r, text, theme.accent, 0);
+    let Some((size, lines)) = letters(text, r, size) else {
+        return label(buf, r, text, theme.accent, Size::Plain);
     };
-    let (scale, lines) = lines;
-    let tall = lines.len() as i32 * line_rows(scale) as i32 * 2 - if scale == 1 { 1 } else { 2 };
-    let top = r.y as i32 * 2 + (r.height as i32 * 2 - tall).max(0) / 2;
+    let (font, scale) = size.face();
     let mut nth = (time * 3.0) as usize;
-    for (i, line) in lines.iter().enumerate() {
-        let x = r.x as i32 + (r.width as i32 - (font::width(line) * scale) as i32) / 2;
+    for (x, y, line) in lines {
         for (at, letter) in line.char_indices() {
             // A letter starts a pixel after everything before it.
-            let before = if at == 0 { 0 } else { (font::width(&line[..at]) + 1) * scale };
-            font::draw(buf, x + before as i32, top + i as i32 * line_rows(scale) as i32 * 2, &letter.to_string(), color(colors[nth % colors.len()]), scale);
+            let before = if at == 0 { 0 } else { (font.width(&line[..at]) + 1) * scale };
+            font.draw(buf, x + before as i32, y, &letter.to_string(), color(colors[nth % colors.len()]), scale);
             nth += usize::from(letter != ' ');
         }
     }
@@ -420,13 +471,16 @@ fn flag(buf: &mut Buffer, r: Rect, flag: &Flag, theme: &Theme) {
     c.blit(buf, (r.x + (r.width - cols) / 2, r.y));
 }
 
-/// A row of three stars, the earned ones bright.
-fn stars(buf: &mut Buffer, r: Rect, earned: u8, bright: Rgb, faint: Rgb, big: bool) {
-    if big && r.height >= font::ROWS && r.width >= 23 {
-        let x = r.x as i32 + (r.width as i32 - 23) / 2;
-        let y = r.y as i32 * 2 + (r.height as i32 * 2 - 7) / 2;
+/// A row of three stars, the earned ones bright, in letters of `size` if they fit.
+fn stars(buf: &mut Buffer, r: Rect, earned: u8, bright: Rgb, faint: Rgb, size: Size) {
+    // A star and the gap after it, in pixels.
+    let step = if size >= Size::Big { 9 } else { 7 };
+    let (font, _) = size.face();
+    if size > Size::Plain && r.height >= size.line_rows() && r.width as i32 >= step * 2 + 5 {
+        let x = r.x as i32 + (r.width as i32 - step * 2 - 5) / 2;
+        let y = r.y as i32 * 2 + (r.height as i32 * 2 - font.height as i32) / 2;
         for i in 0..3 {
-            font::draw(buf, x + i * 9, y, "*", color(if (i as u8) < earned { bright } else { faint }), 1);
+            font.draw(buf, x + i * step, y, "*", color(if (i as u8) < earned { bright } else { faint }), 1);
         }
     } else if r.width >= 5 && r.height >= 1 {
         let (x, y) = (r.x + (r.width - 5) / 2, r.y + r.height / 2);
@@ -450,14 +504,14 @@ fn title(buf: &mut Buffer, r: Rect, theme: &Theme, scale: usize, time: f32, fall
         let wave = if above == 0.0 { ((time * 3.0 + i as f32 * 0.8).sin() * scale as f32).round() as i32 } else { 0 };
         let y = r.y as i32 * 2 + 2 * scale as i32 + wave - above as i32;
         // A shadow first, a pixel down and to the right, to lift the letter off the page.
-        font::draw(buf, x + i as i32 * advance + 1, y + 1, &letter.to_string(), color(mix(theme.bg, (0, 0, 0), 0.25)), scale);
-        font::draw(buf, x + i as i32 * advance, y, &letter.to_string(), color(colors[i]), scale);
+        font::BIG.draw(buf, x + i as i32 * advance + 1, y + 1, &letter.to_string(), color(mix(theme.bg, (0, 0, 0), 0.25)), scale);
+        font::BIG.draw(buf, x + i as i32 * advance, y, &letter.to_string(), color(colors[i]), scale);
     }
 }
 
 /// Rows the title needs at this scale: the letters, and room to ride the wave.
 fn title_rows(scale: usize) -> u16 {
-    font::rows(scale) + 2 * scale as u16
+    font::BIG.rows(scale) + 2 * scale as u16
 }
 
 fn intro(buf: &mut Buffer, app: &mut App, area: Rect) {
@@ -492,7 +546,7 @@ fn intro(buf: &mut Buffer, app: &mut App, area: Rect) {
     if t > walk_from {
         let words = Rect::new(area.x + 2, below + scene_rows + 1, area.width - 4, area.height.saturating_sub(below + scene_rows + 2));
         if words.height >= 6 {
-            label(buf, Rect { height: 4, ..words }, "Build bridges around the world!", theme.text, 1);
+            label(buf, Rect { height: 4, ..words }, "Build bridges around the world!", theme.text, Size::Big);
             centered(buf, words, words.y + 5, "Press any key or click to start", theme.dim);
         } else if words.height >= 1 {
             centered(buf, words, words.y, "Build bridges around the world!  Press any key or click to start", theme.text);
@@ -522,7 +576,7 @@ fn settings(buf: &mut Buffer, app: &mut App, r: Rect, last: (&str, &str, Action)
         let inside = button(buf, app, at, Some(action), bg, false);
         let long = format!("{key}  {name}");
         let text = if long.chars().count() as u16 <= inside.width { long } else { format!("{key} {short}") };
-        label(buf, inside, &text, ink(bg), 0);
+        label(buf, inside, &text, ink(bg), Size::Plain);
     }
 }
 
@@ -564,10 +618,18 @@ fn home(buf: &mut Buffer, app: &mut App, area: Rect) {
     // All the names in big letters, or none of them.
     let name_at = |top: u16| Rect::new(x0 + 2, top, name_w.saturating_sub(5), high);
     // Big letters want a row to spare, or they touch the edges.
-    let big_names = usize::from(high > font::ROWS && app.cats.iter().all(|c| big_lines(&c.name, name_at(0), 1).is_some()));
+    let big_names = high > font::ROWS && app.cats.iter().all(|c| Size::Big.lines(&c.name, name_at(0)).is_some());
+    let names = if big_names { Size::Big } else { Size::Plain };
     let big_stars = high > font::ROWS && cell_w >= 28;
+    let star_size = if big_stars { Size::Big } else { Size::Plain };
     for (i, level) in Level::ALL.into_iter().enumerate() {
-        label(buf, Rect::new(x0 + name_w + i as u16 * cell_w, y, cell_w - 1, levels), level.name(), theme.text, 1);
+        label(
+            buf,
+            Rect::new(x0 + name_w + i as u16 * cell_w, y, cell_w - 1, levels),
+            level.name(),
+            theme.text,
+            if levels > 1 { Size::Big } else { Size::Plain },
+        );
     }
     if shown < rows {
         put(buf, x0, y, if first + shown < rows { "▼ more below" } else { "▲ more above" }, theme.dim, name_w);
@@ -579,13 +641,13 @@ fn home(buf: &mut Buffer, app: &mut App, area: Rect) {
         let playable: Vec<bool> = Level::ALL.iter().map(|&l| cat.has(l)).collect();
         let top = y + (row - first) * row_h;
         fill(buf, Rect::new(x0, top, name_w - 1, high), tint);
-        label(buf, name_at(top), &name, ink(tint), big_names);
+        label(buf, name_at(top), &name, ink(tint), names);
         for (i, level) in Level::ALL.into_iter().enumerate() {
             let at = Rect::new(x0 + name_w + i as u16 * cell_w, top, cell_w - 1, high);
             let earned = app.progress.stars(&id, level);
             if !playable[i] {
                 fill(buf, at, mix(theme.bg, theme.dim, 0.15));
-                label(buf, at, "-", theme.dim, 0);
+                label(buf, at, "-", theme.dim, Size::Plain);
                 // The marker can rest here, though there is nothing to start.
                 if app.cursor == (row as usize, i) {
                     put(buf, at.x + 1, at.y + high / 2, "▶", theme.dim, 1);
@@ -601,7 +663,7 @@ fn home(buf: &mut Buffer, app: &mut App, area: Rect) {
             fill(buf, at, bg);
             app.buttons.push((at, Action::Start(row as usize, level)));
             let inside = Rect { x: at.x + 2, width: at.width.saturating_sub(4), ..at };
-            stars(buf, inside, earned, ink(bg), mix(bg, ink(bg), 0.25), big_stars);
+            stars(buf, inside, earned, ink(bg), mix(bg, ink(bg), 0.25), star_size);
             if marked && high >= if big_stars { 6 } else { 3 } {
                 frame(buf, at, ink(bg));
             } else if marked {
@@ -620,8 +682,8 @@ struct PlayLayout {
     picture: Rect,
     answers: [Rect; 4],
     feedback: Rect,
-    /// Big letters for the question, and for the answers.
-    big: (bool, bool),
+    /// The letters of the question, and of the answers.
+    sizes: (Size, Size),
     columns: usize,
 }
 
@@ -629,8 +691,8 @@ struct PlayLayout {
 #[derive(Clone, Copy)]
 struct Fit {
     question: u16,
-    /// Big letters for the question, and for the answers.
-    big: (bool, bool),
+    /// The letters of the question, and of the answers.
+    sizes: (Size, Size),
     /// The height of an answer's button.
     button: u16,
     columns: u16,
@@ -639,6 +701,15 @@ struct Fit {
     gap: u16,
     /// The fewest the scene may have.
     scene: u16,
+}
+
+/// Rows of a button whose words are small letters: theirs, and the frame's.
+const SMALL_BUTTON: u16 = font::SMALL_ROWS + 2;
+
+/// How wide the button to go on is in small letters, whichever of its words it has.
+/// Letters take room, so they leave out the name of the key: the frame says Enter.
+fn next_width() -> u16 {
+    Size::Small.width("Cross! →") + 10
 }
 
 fn play_layout(area: Rect, asked: &Asked) -> PlayLayout {
@@ -653,15 +724,22 @@ fn play_layout(area: Rect, asked: &Asked) -> PlayLayout {
     let plain_question = wrap(&asked.question.text, (inner as usize).min(76)).len() as u16;
     let longest = asked.options.iter().map(|o| o.chars().count()).max().unwrap_or(0) as u16;
     let plain_columns = if half >= longest + 8 { 2 } else { 1 };
-    // In big letters an answer has its letter, a gap and its words, inside the frame.
-    let big_answer = asked.options.iter().map(|o| if font::supported(o) { font::width(o) as u16 + 14 } else { u16::MAX }).max().unwrap_or(u16::MAX);
-    let big_question = font::wrap(&asked.question.text, inner as usize).map(|lines| lines.len() as u16 * font::ROWS).filter(|&rows| rows <= 12);
+    // In letters an answer has its own letter, a gap and its words, inside the frame.
+    let widest = |size: Size, around: u16| {
+        let wide = |o: &String| if size.face().0.supported(o) { size.width(o) + around } else { u16::MAX };
+        asked.options.iter().map(wide).max().unwrap_or(u16::MAX)
+    };
+    let (big_answer, small_answer) = (widest(Size::Big, 14), widest(Size::Small, 11));
+    let big_question = font::BIG.wrap(&asked.question.text, inner as usize).map(|lines| lines.len() as u16 * font::ROWS).filter(|&rows| rows <= 12);
 
     // The ways to lay it out, from best to barely fitting. The question is the first
-    // thing to get big letters: it is the most there is to read.
+    // thing to get big letters: it is the most there is to read. Under a question in
+    // big letters the answers are in letters too, big ones or small ones, since
+    // ordinary text looks tiny beside it. Where that does not fit, both are in small
+    // letters, and only a window with no room for that either has ordinary text.
     let plain = |button: u16, picture: u16, gap: u16, scene: u16| Fit {
         question: plain_question,
-        big: (false, false),
+        sizes: (Size::Plain, Size::Plain),
         button,
         columns: plain_columns,
         picture,
@@ -669,14 +747,30 @@ fn play_layout(area: Rect, asked: &Asked) -> PlayLayout {
         scene,
     };
     let mut tries: Vec<Fit> = Vec::new();
+    // Answers in small letters under a question of `rows` rows, with less and less
+    // room around them.
+    let tight = |tries: &mut Vec<Fit>, size: Size, rows: u16| {
+        for (picture, gap, scene) in [(picture, 1, 7), (picture.min(6), 1, 6), (picture.min(5), 0, 5)] {
+            for columns in [2, 1] {
+                if small_answer <= if columns == 2 { half } else { inner } {
+                    tries.push(Fit { question: rows, sizes: (size, Size::Small), button: SMALL_BUTTON, columns, picture, gap, scene });
+                }
+            }
+        }
+    };
     if let Some(rows) = big_question {
         for columns in [2, 1] {
             if big_answer <= if columns == 2 { half } else { inner } {
-                tries.push(Fit { question: rows, big: (true, true), button: 6, columns, picture, gap: 1, scene: 7 });
+                tries.push(Fit { question: rows, sizes: (Size::Big, Size::Big), button: 6, columns, picture, gap: 1, scene: 7 });
             }
         }
-        tries.push(Fit { question: rows, big: (true, false), ..plain(5, picture, 1, 7) });
-        tries.push(Fit { question: rows, big: (true, false), ..plain(3, picture, 1, 6) });
+        tight(&mut tries, Size::Big, rows);
+    }
+    if let Some(rows) = Size::Small.wrap(&asked.question.text, inner).map(|lines| lines.len() as u16 * font::SMALL_ROWS).filter(|&rows| rows <= 9) {
+        tight(&mut tries, Size::Small, rows);
+    }
+    if let Some(rows) = big_question {
+        tries.push(Fit { question: rows, sizes: (Size::Big, Size::Plain), ..plain(3, picture, 1, 6) });
     }
     tries.extend([plain(5, picture, 1, 7), plain(3, picture.min(6), 1, 7), plain(3, picture.min(5), 0, 5), plain(1, picture.min(4), 0, 4)]);
     let needs = |t: &Fit| {
@@ -684,7 +778,7 @@ fn play_layout(area: Rect, asked: &Asked) -> PlayLayout {
         header + t.scene + t.question + t.picture + lines * t.button + (lines - 1) * t.gap + feedback + 3 * t.gap + u16::from(t.picture > 0) * t.gap
     };
     let pick = tries.iter().find(|t| needs(t) <= h).unwrap_or(&tries[tries.len() - 1]);
-    let &Fit { question: question_rows, big, button: button_rows, columns, picture, gap, scene: least } = pick;
+    let &Fit { question: question_rows, sizes, button: button_rows, columns, picture, gap, scene: least } = pick;
 
     let spare = h.saturating_sub(needs(pick));
     // Spare rows go to the scene first, but less of them when there is a flag to show:
@@ -717,7 +811,7 @@ fn play_layout(area: Rect, asked: &Asked) -> PlayLayout {
         *at = Rect::new(x0 + column * (button_w + 2), y + line * (button_rows + gap), button_w, button_rows);
     }
     let feedback = Rect::new(x0, (area.y + h).saturating_sub(feedback), inner, feedback);
-    PlayLayout { header: Rect::new(area.x, area.y, w, header), scene, question, picture, answers, feedback, big, columns: columns as usize }
+    PlayLayout { header: Rect::new(area.x, area.y, w, header), scene, question, picture, answers, feedback, sizes, columns: columns as usize }
 }
 
 fn play(buf: &mut Buffer, app: &mut App, area: Rect) {
@@ -729,13 +823,14 @@ fn play(buf: &mut Buffer, app: &mut App, area: Rect) {
     let headings =
         [format!("{name} · {} · {laid} of {PLANKS} planks", level.name()), format!("{name} · {} · {laid}/{PLANKS}", level.name()), format!("{laid}/{PLANKS}")];
     let lay = play_layout(area, &asked);
+    let (question_size, answer_size) = lay.sizes;
     app.columns = lay.columns;
 
     // The top line: back, where we are, and the settings.
     fill(buf, lay.header, theme.panel);
     let back = Rect::new(lay.header.x, lay.header.y, 14, lay.header.height);
     let inside = button(buf, app, back, Some(Action::Back), mix(theme.panel, theme.accent, 0.4), false);
-    label(buf, inside, "Esc  Back", ink(mix(theme.panel, theme.accent, 0.4)), 0);
+    label(buf, inside, "Esc  Back", ink(mix(theme.panel, theme.accent, 0.4)), Size::Plain);
     let keys: [(&str, Action); 4] = [("T Theme", Action::Theme), ("S Sound", Action::Sound), ("M Motion", Action::Motion), ("? Help", Action::Help)];
     let each: u16 = if area.width >= 100 { 13 } else { 4 };
     let keys_x = lay.header.right() - each * 4;
@@ -745,7 +840,7 @@ fn play(buf: &mut Buffer, app: &mut App, area: Rect) {
         let bg = if off { mix(theme.panel, theme.dim, 0.3) } else { mix(theme.panel, theme.answers[i], 0.4) };
         let inside = button(buf, app, at, Some(action), bg, false);
         if each > 4 {
-            label(buf, inside, name, ink(bg), 0);
+            label(buf, inside, name, ink(bg), Size::Plain);
         } else {
             put(buf, at.x + 1, at.y + at.height / 2, &name[..1], ink(bg), 1);
         }
@@ -761,17 +856,17 @@ fn play(buf: &mut Buffer, app: &mut App, area: Rect) {
     scene(buf, lay.scene, theme, &Scene { laid: lying, drop: falling, walker: app.walker, cheering, flag: tint, time: app.time });
 
     if let Phase::Done { stars: earned, best } = app.phase {
-        return done(buf, app, Rect::new(area.x, lay.scene.bottom(), area.width, area.bottom() - lay.scene.bottom()), earned, best);
+        return done(buf, app, Rect::new(area.x, lay.scene.bottom(), area.width, area.bottom() - lay.scene.bottom()), earned, best, answer_size > Size::Plain);
     }
 
     if app.phase == Phase::Crossing {
         // Nothing left to answer: watch the explorer go, or press on to the stars.
         let below = Rect::new(area.x + 2, lay.scene.bottom() + 1, area.width - 4, area.bottom() - lay.scene.bottom() - 1);
         app.buttons.push((area, Action::Skip));
-        return label(buf, Rect { height: below.height.min(8), ..below }, "Off we go!", theme.good, 1);
+        return label(buf, Rect { height: below.height.min(8), ..below }, "Off we go!", theme.good, Size::Big);
     }
 
-    label(buf, lay.question, &asked.question.text, theme.text, usize::from(lay.big.0));
+    label(buf, lay.question, &asked.question.text, theme.text, question_size);
     if let Some(picture) = &asked.question.picture {
         flag(buf, lay.picture, picture, theme);
     }
@@ -798,14 +893,17 @@ fn play(buf: &mut Buffer, app: &mut App, area: Rect) {
         let inside = button(buf, app, at, action, bg, marked);
         let fg = ink(bg);
         let letter = ["A", "B", "C", "D"][i];
-        if lay.big.1 && inside.height >= font::ROWS {
-            let top = inside.y as i32 * 2 + (inside.height as i32 * 2 - 7) / 2;
-            font::draw(buf, inside.x as i32, top, letter, color(mix(bg, fg, 0.55)), 1);
-            label(buf, Rect { x: inside.x + 8, width: inside.width.saturating_sub(8), ..inside }, option, fg, 1);
+        if answer_size > Size::Plain && inside.height >= answer_size.line_rows() {
+            // Its letter at the left, and its words in the middle of what is left.
+            let (font, _) = answer_size.face();
+            let top = inside.y as i32 * 2 + (inside.height as i32 * 2 - font.height as i32) / 2;
+            font.draw(buf, inside.x as i32, top, letter, color(mix(bg, fg, 0.55)), 1);
+            let past = answer_size.width(letter) + 3;
+            label(buf, Rect { x: inside.x + past, width: inside.width.saturating_sub(past), ..inside }, option, fg, answer_size);
         } else {
             let line = inside.y + inside.height / 2;
             put(buf, inside.x, line, letter, mix(bg, fg, 0.6), 1);
-            label(buf, Rect { x: inside.x + 3, width: inside.width.saturating_sub(3), ..inside }, &format!("{mark}{option}"), fg, 0);
+            label(buf, Rect { x: inside.x + 3, width: inside.width.saturating_sub(3), ..inside }, &format!("{mark}{option}"), fg, Size::Plain);
         }
     }
 
@@ -817,36 +915,53 @@ fn play(buf: &mut Buffer, app: &mut App, area: Rect) {
         } else {
             "Click an answer, or press A, B, C or D."
         };
-        label(buf, Rect { y: fb.y + fb.height / 2, height: fb.height - fb.height / 2, ..fb }, hint, theme.dim, 0);
+        label(buf, Rect { y: fb.y + fb.height / 2, height: fb.height - fb.height / 2, ..fb }, hint, theme.dim, Size::Plain);
         return;
     };
-    let next_w = 26.min(fb.width / 3);
+    // The button to go on has small letters where the answers have letters, if it fits.
+    let lettered = answer_size > Size::Plain && fb.height > SMALL_BUTTON && next_width() <= fb.width / 2;
+    let next_w = if lettered { next_width() } else { 26.min(fb.width / 3) };
     let words = Rect { width: fb.width - next_w - 2, ..fb };
     let said = if right { app.praise.to_string() } else { format!("{} It is {}.", app.praise, asked.question.answer) };
     let tone = if right { theme.good } else { theme.bad };
     let fact_y = if fb.height >= 7 {
-        label(buf, Rect { height: 4, ..words }, &said, tone, 1);
+        label(buf, Rect { height: 4, ..words }, &said, tone, Size::Big);
         words.y + 4
     } else {
-        label(buf, Rect { height: 1, ..words }, &said, tone, 0);
+        label(buf, Rect { height: 1, ..words }, &said, tone, Size::Plain);
         words.y + 1
     };
-    label(buf, Rect { y: fact_y, height: fb.bottom() - fact_y - 1, ..words }, &asked.question.fact, theme.text, 0);
-    let next = Rect::new(fb.right() - next_w, fb.y + (fb.height - 3.min(fb.height)) / 2, next_w, 3.min(fb.height));
+    label(buf, Rect { y: fact_y, height: fb.bottom() - fact_y - 1, ..words }, &asked.question.fact, theme.text, Size::Plain);
+    let next_h = if lettered { SMALL_BUTTON } else { 3.min(fb.height) };
+    let next = Rect::new(fb.right() - next_w, fb.y + (fb.height - next_h) / 2, next_w, next_h);
     let inside = button(buf, app, next, Some(Action::Next), theme.accent, true);
-    label(buf, inside, if built { "Enter  Cross! →" } else { "Enter  Next →" }, ink(theme.accent), 0);
+    let words = match (built, lettered) {
+        (true, true) => "Cross! →",
+        (false, true) => "Next →",
+        (true, false) => "Enter  Cross! →",
+        (false, false) => "Enter  Next →",
+    };
+    label(buf, inside, words, ink(theme.accent), if lettered { Size::Small } else { Size::Plain });
 }
 
-/// The end of a round, under the scene: the stars, and what to do next.
-fn done(buf: &mut Buffer, app: &mut App, r: Rect, earned: u8, best: bool) {
+/// The end of a round, under the scene: the stars, and what to do next. With
+/// `lettered`, as the answers were, its buttons have small letters if they fit.
+fn done(buf: &mut Buffer, app: &mut App, r: Rect, earned: u8, best: bool, lettered: bool) {
     let theme = app.theme();
     let r = Rect { x: r.x + 2, width: r.width - 4, ..r };
     let roomy = r.height >= 18;
     let mut y = r.y + 1;
-    label(buf, Rect::new(r.x, y, r.width, font::ROWS), "Bridge built!", theme.good, 1);
+    label(buf, Rect::new(r.x, y, r.width, font::ROWS), "Bridge built!", theme.good, Size::Big);
     y += font::ROWS + 1;
     let star_rows = if roomy { font::ROWS } else { 1 };
-    stars(buf, Rect::new(r.x, y, r.width, star_rows), app.stars_shown, (255, 200, 30), mix(theme.bg, theme.dim, 0.5), roomy);
+    stars(
+        buf,
+        Rect::new(r.x, y, r.width, star_rows),
+        app.stars_shown,
+        (255, 200, 30),
+        mix(theme.bg, theme.dim, 0.5),
+        if roomy { Size::Big } else { Size::Plain },
+    );
     y += star_rows + 1;
     let said = match (earned, best) {
         (3, true) => "Three stars! A new stamp for your passport.",
@@ -856,13 +971,22 @@ fn done(buf: &mut Buffer, app: &mut App, r: Rect, earned: u8, best: bool) {
     };
     centered(buf, r, y, said, theme.text);
     y += 2;
-    let high = if r.bottom().saturating_sub(y) >= 4 { 3 } else { 1 };
-    let wide = 30.min((r.width - 2) / 2);
+    let small_w = Size::Small.width("P Play again") + 10;
+    let lettered = lettered && r.bottom().saturating_sub(y) > SMALL_BUTTON && small_w <= (r.width - 2) / 2;
+    let high = if lettered {
+        SMALL_BUTTON
+    } else if r.bottom().saturating_sub(y) >= 4 {
+        3
+    } else {
+        1
+    };
+    let wide = if lettered { small_w } else { 30.min((r.width - 2) / 2) };
     let x = r.x + (r.width - wide * 2 - 2) / 2;
     for (i, (name, bg)) in [("Enter  Passport", theme.answers[1]), ("P  Play again", theme.answers[3])].into_iter().enumerate() {
-        let (words, action) = (if app.focus == i { name.to_string() } else { name.replace("Enter  ", "") }, App::DONE[i]);
+        // In letters there is no room for "Enter": the frame says it.
+        let (words, action) = (if app.focus == i && !lettered { name.to_string() } else { name.replace("Enter  ", "") }, App::DONE[i]);
         let inside = button(buf, app, Rect::new(x + i as u16 * (wide + 2), y, wide, high), Some(action), bg, app.focus == i);
-        label(buf, inside, &words, ink(bg), 0);
+        label(buf, inside, &words, ink(bg), if lettered { Size::Small } else { Size::Plain });
     }
 }
 
@@ -907,17 +1031,18 @@ fn celebration(buf: &mut Buffer, app: &mut App, area: Rect) {
 
     // How big everything is. The title gets big letters first, twice the size for the
     // two grandest where the window has the room; the picture gets what is left.
-    let wide = (area.width - 2).min((66 + 10 * tier).max(font::width(&title) as u16 + 8));
+    let wide = (area.width - 2).min((66 + 10 * tier).max(Size::Big.width(&title) + 8));
     let inner = wide - 4;
     let lines = wrap(&said, inner as usize);
     // Inside the frame: the picture, the title, the words and how to go on, with a
     // row between them.
     let room = (area.height - 3).saturating_sub(lines.len() as u16 + 4);
-    let fits = |scale: usize| {
-        let rows = room.saturating_sub(if scale > 1 { 6 } else { 0 });
-        big_lines(&title, Rect::new(0, 0, inner, rows), scale).map(|l| (scale, l.len() as u16 * line_rows(scale)))
+    let fits = |size: Size| {
+        let rows = room.saturating_sub(if size == Size::Huge { 6 } else { 0 });
+        size.lines(&title, Rect::new(0, 0, inner, rows)).map(|l| (size, l.len() as u16 * size.line_rows()))
     };
-    let (scale, title_rows) = (1..=if tier >= 5 { 2 } else { 1 }).rev().find_map(fits).unwrap_or((0, 1));
+    let sizes = if tier >= 5 { vec![Size::Huge, Size::Big] } else { vec![Size::Big] };
+    let (size, title_rows) = sizes.into_iter().find_map(fits).unwrap_or((Size::Plain, 1));
     let sprite_w: u16 = [9, 9, 9, 9, 11, 33][tier as usize - 1];
     let unit = ((room - title_rows.min(room)) / 5).min(if tier >= 5 { 3 } else { 2 }).min(inner / sprite_w);
     let pic = 5 * unit;
@@ -971,9 +1096,9 @@ fn celebration(buf: &mut Buffer, app: &mut App, area: Rect) {
     }
     let at = Rect::new(inside.x, y, inside.width, title_rows);
     if tier >= 5 {
-        bright_label(buf, at, &title, theme, scale, app.time);
+        bright_label(buf, at, &title, theme, size, app.time);
     } else {
-        label(buf, at, &title, theme.good, scale);
+        label(buf, at, &title, theme.good, size);
     }
     y += title_rows + 1;
     for (i, line) in lines.iter().enumerate() {
@@ -1037,7 +1162,7 @@ pub fn draw(frame: &mut Frame, app: &mut App) {
     app.size = (area.width, area.height);
     fill(buf, area, theme.bg);
     if area.width < MIN.0 || area.height < MIN.1 {
-        label(buf, area, &format!("Please make the window bigger: at least {} by {}.", MIN.0, MIN.1), theme.text, 0);
+        label(buf, area, &format!("Please make the window bigger: at least {} by {}.", MIN.0, MIN.1), theme.text, Size::Plain);
     } else {
         particles(buf, app, false);
         match app.screen {
@@ -1145,7 +1270,10 @@ mod tests {
                     screen(&mut app, w, h);
                 }
                 let built = app.playing.as_ref().unwrap().2.built();
-                assert!(has(&screen(&mut app, w, h), if built { "Cross!" } else { "Next" }), "{w}x{h}");
+                // Said in text, or drawn in letters where the answers are.
+                let lettered = play_layout(Rect::new(0, 0, w, h), &app.playing.as_ref().unwrap().2.asked).sizes.1 > Size::Plain;
+                assert!(lettered || has(&screen(&mut app, w, h), if built { "Cross!" } else { "Next" }), "{w}x{h}");
+                assert!(app.buttons.iter().any(|(r, a)| *a == Action::Next && r.bottom() <= h), "{w}x{h}");
                 app.act(Action::Next);
                 if built {
                     break;
@@ -1156,7 +1284,10 @@ mod tests {
                 screen(&mut app, w, h);
             }
             let lines = screen(&mut app, w, h);
-            assert!(has(&lines, "Play again") && has(&lines, "Passport") && has(&lines, "passport"), "{w}x{h}: {lines:#?}");
+            assert!(
+                has(&lines, "passport") && (lines.iter().filter(|l| l.contains('━')).count() == 2 || has(&lines, "Play again") && has(&lines, "Passport")),
+                "{w}x{h}: {lines:#?}"
+            );
             for action in App::DONE {
                 assert!(app.buttons.iter().any(|(r, a)| *a == action && r.bottom() <= h), "{w}x{h}: {action:?}");
             }
@@ -1221,7 +1352,7 @@ mod tests {
         let lines = screen(&mut app, 213, 58);
         assert!(!has(&lines, &text));
         let lay = play_layout(Rect::new(0, 0, 213, 58), &app.playing.as_ref().unwrap().2.asked);
-        assert_eq!(lay.big, (true, true));
+        assert_eq!(lay.sizes, (Size::Big, Size::Big));
         let blocks = |r: Rect| {
             (r.top()..r.bottom())
                 .flat_map(|y| lines[y as usize].chars().skip(r.x as usize).take(r.width as usize).collect::<Vec<_>>())
@@ -1229,6 +1360,61 @@ mod tests {
                 .count()
         };
         assert!(blocks(lay.question) > 100 && lay.answers.iter().all(|&a| blocks(a) > 40));
+    }
+
+    /// Every built-in question, as it is put to the player.
+    fn questions() -> Vec<(usize, Level, Asked)> {
+        let asked = |cat: usize, q: &quiz::Question| {
+            let options: Vec<String> = q.wrong.iter().take(3).cloned().chain([q.answer.clone()]).collect();
+            (cat, q.level, Asked { question: q.clone(), options, correct: 3 })
+        };
+        quiz::builtin().iter().enumerate().flat_map(|(i, cat)| cat.questions.iter().map(move |q| asked(i, q)).collect::<Vec<_>>()).collect()
+    }
+
+    #[test]
+    fn the_answers_are_in_small_letters_where_big_ones_do_not_fit() {
+        // Nothing is over anything else, whatever the window and the question.
+        for (w, h) in SIZES {
+            let lays: Vec<PlayLayout> = questions().iter().map(|(.., asked)| play_layout(Rect::new(0, 0, w, h), asked)).collect();
+            for lay in &lays {
+                assert!(lay.answers[3].bottom() <= lay.feedback.y && lay.scene.bottom() <= lay.question.y, "{w}x{h}");
+            }
+            // From this size on there is room for letters, whatever the question.
+            let lettered = lays.iter().filter(|lay| lay.sizes.1 > Size::Plain).count();
+            assert!(h < 45 || lettered == lays.len(), "{w}x{h}: {lettered} of {}", lays.len());
+        }
+
+        // A window that has big letters for the question only: the answers, the button
+        // to go on and those at the end are in small letters, and the rest is text.
+        let mut app = app();
+        app.animations = false;
+        app.start(0, Level::Easy);
+        let (w, h) = (120, 40);
+        let (_, _, asked) = questions().into_iter().find(|(.., asked)| asked.question.answer == "Paris").unwrap();
+        app.playing.as_mut().unwrap().2.asked = asked.clone();
+        let lay = play_layout(Rect::new(0, 0, w, h), &asked);
+        assert_eq!(lay.sizes, (Size::Big, Size::Small));
+        let lines = screen(&mut app, w, h);
+        let blocks = |lines: &[String], r: Rect| {
+            (r.top()..r.bottom())
+                .flat_map(|y| lines[y as usize].chars().skip(r.x as usize).take(r.width as usize).collect::<Vec<_>>())
+                .filter(|c| "█▀▄".contains(*c))
+                .count()
+        };
+        assert!(asked.options.iter().all(|o| !has(&lines, o)) && lay.answers.iter().all(|&a| blocks(&lines, a) > 15), "{lines:#?}");
+        assert!(has(&lines, "A, B, C or D") && has(&lines, "Back"));
+        app.act(Action::Answer(3));
+        let lines = screen(&mut app, w, h);
+        let next = app.buttons.iter().find(|(_, a)| *a == Action::Next).unwrap().0;
+        assert!(!has(&lines, "Next") && blocks(&lines, next) > 20 && has(&lines, asked.question.fact.split(' ').next().unwrap()), "{lines:#?}");
+        app.phase = Phase::Done { stars: 3, best: true };
+        let lines = screen(&mut app, w, h);
+        assert!(!has(&lines, "Play again") && !has(&lines, "Passport") && has(&lines, "passport"), "{lines:#?}");
+        for action in App::DONE {
+            // The last of them: the header has a way back too.
+            let at = app.buttons.iter().rev().find(|(_, a)| *a == action).unwrap().0;
+            assert!(at.bottom() <= h && blocks(&lines, at) > 20, "{action:?}");
+        }
     }
 
     #[test]

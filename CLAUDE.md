@@ -65,7 +65,7 @@ Single binary crate, no async, no threads. One file per concern in `src/`:
 | `quiz.rs`   | The question file format and its parser, `Category`, `Flag` (flags as shapes), `Round` (one bridge), the small `Rng`. Knows nothing about the screen |
 | `app.rs`    | `App` state; what every key, click and tick does; `Progress` (the stars); particles |
 | `ui.rs`     | All drawing: layouts, the river scene, flags, big-letter labels, and the clickable rectangles (`App::buttons`) |
-| `font.rs`   | The 5x7 bitmap letters, drawn with half-block characters |
+| `font.rs`   | The bitmap letters, big (5x7) and small (about 3x5), drawn with half-block characters |
 | `sound.rs`  | Sounds made out of notes, written as WAV files and handed to the system's player |
 | `theme.rs`  | The five themes and `Settings` |
 | `update.rs` | Self-update, the sister projects' design |
@@ -94,8 +94,17 @@ an `Action` with both a button and a key.
   text, so `ui::label` draws in `font.rs`'s big letters wherever they fit and falls
   back to bold text. `ui::play_layout` tries layouts from best to barely fitting
   (`Fit`); the question gets big letters before the answers do. The big font is
-  capitals only; `font::supported` gates it, and a test requires every built-in
+  capitals only; `Font::supported` gates it, and a test requires every built-in
   question and answer to be drawable in it.
+- **Small letters for the round's buttons.** The user found ordinary text in the
+  answer boxes odd under a question in big letters (2026-10-08, since 0.1.3), and asked for
+  smaller block letters there instead; the menus (the header, the passport's
+  settings, help) may stay ordinary text. So `font::SMALL` (`ui::Size::Small`) is
+  what the answers get when big ones do not fit, and with them the buttons to go
+  on and those at the end of a round, which leave out "Enter" to fit. `label` goes
+  down the sizes: big, small, ordinary. From 160x45 every built-in question has
+  its answers in letters; in a smaller window `play_layout` tries small letters
+  for question and answers before a big question over ordinary text.
 - **Categories are files** (the user asked for categories to be addable without
   touching the architecture). Built-in: `questions/*.txt`, listed by `build.rs`.
   A player's own: `~/.config/fungeo/questions/*.txt`, same format, read at start;
