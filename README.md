@@ -18,8 +18,10 @@ passport.
 - **Mouse or keyboard, or both at once.** Everything on the screen can be clicked,
   and everything has a key.
 - **Big letters.** In a large window the questions and answers are drawn several rows
-  tall. A terminal cannot change its own text size, so for the smaller text make the
-  window full screen and zoom in (usually `Ctrl` `+`).
+  tall. Where an answer has no room for them, it is drawn in smaller letters of the
+  same kind, not in the terminal's own text. A terminal cannot change its own text
+  size, so for the smaller text make the window full screen and zoom in (usually
+  `Ctrl` `+`).
 - **Kind to a wrong answer.** A plank falls in the river, the right answer is shown,
   and the question comes back later for another try. Nobody loses.
 - **Celebrations** with medals, fireworks and a fanfare: for finishing a category,

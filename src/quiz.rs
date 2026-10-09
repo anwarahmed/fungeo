@@ -684,7 +684,7 @@ P: flag v blue white red
             for (i, question) in category.questions.iter().enumerate() {
                 // Everything a child reads can be drawn in the big letters.
                 for text in question.wrong.iter().chain([&question.text, &question.answer]) {
-                    assert!(crate::font::supported(text), "{}: no big letters for {text:?}", category.id);
+                    assert!(crate::font::BIG.supported(text), "{}: no big letters for {text:?}", category.id);
                 }
                 assert!(question.text.ends_with('?'), "{}: {:?}", category.id, question.text);
                 assert!(!question.fact.is_empty() && question.fact.ends_with(['.', '!']), "{}: the fact of {:?}", category.id, question.answer);
